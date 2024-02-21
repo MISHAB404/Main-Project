@@ -22,8 +22,17 @@ The scope of the project encompasses the development of a Resource-Sharing Broke
 
 ## Existing system
 The existing system for digital asset transactions, particularly in the context of resource- sharing such as selling and buying social media accounts, is characterized by an informal and decentralized approach. Individuals engaged in such transactions rely on various com- munication channels, such as WhatsApp, Instagram, or direct phone calls, to initiate, ne- gotiate, and finalize deals. While this approach offers a degree of flexibility, it introduces several challenges and shortcomings that hinder the overall effectiveness and security of the transaction process.
+
  ## Proposed system
 The proposed True Transfer application aims to address the aforementioned challenges by introducing a secure, standardized, and user-friendly platform for digital asset trans- actions. The subsequent sections will delve into the specific features, functionalities, and design principles of the proposed system, highlighting the anticipated benefits for users and administrators alike.
+
+---
+![Alt Text](1.png)
+![Alt Text](2.png)
+![Alt Text](3.png)
+![Alt Text](4.png)
+
+
 
 
 
