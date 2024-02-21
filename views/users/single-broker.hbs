@@ -1,0 +1,171 @@
+<div class="page-title page-title-fixed" style="opacity: 1;">
+    <h1>{{broker.bname}}</h1>
+    <a href="/all-brokers" class="page-title-icon shadow-xl bg-theme color-theme" data-menu="menu-share"><i
+            class="fas fa-chevron-left"></i></a>
+    <a href="#" class="page-title-icon shadow-xl bg-theme color-theme show-on-theme-dark" data-toggle-theme=""><i
+            class="fa fa-lightbulb color-yellow-dark"></i></a>
+    <a href="#" class="page-title-icon shadow-xl bg-theme color-theme" data-menu="menu-main"><i
+            class="fa fa-bars"></i></a>
+</div>
+
+<div class="page-content">
+    <br><br><br><br>
+
+    <div class="card card-full-center bg-dark text-white card-style mt-5">
+        <div class="content">
+            <div class="d-flex">
+                <div class="me-3">
+                    <img width="120" height="auto" class="fluid-img rounded-m shadow-xl bg-white"
+                        src="../images/broker-images/{{broker._id}}.png">
+                </div>
+                <div>
+                    {{!-- <p class="mb-1"><b>Broker Id : </b>{{broker._id}}</p> --}}
+                    <h2 class="mb-2 text-white">{{broker.bname}}</h2><br>
+                    <p class="text-white" style="margin-top: -30px;"><b>Created By :</b>{{broker.uname}} </p>
+                    <p class="text-white" style="margin-top: -30px;"><b>Created at :</b> {{broker.date}} </p>
+                    <p class="text-white" style="margin-top: -30px;"><b>Users : </b>{{broker.uname}}, {{broker.nuser}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card card-full-center  card-style" style="margin-top: -20px;">
+        <div class="content">
+            <div class="d-flex">
+                <div>
+                    <h4 class="mb-2">Broker Status</h4>
+                    <p>Waiting for other users</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="card card-full-center card-style" style="margin-top: -20px;">
+        <div class="content">
+            <div class="d-flex">
+                <div>
+                    <div class="d-flex">
+                        <div class="w-35 border-right pe-3 border-highlight">
+                            <img src="../../assets/images/avatars/2s.png" width="80"
+                                class="bg-highlight rounded-circle">
+                            <h6 class="font-14 font-600 mt-2 text-center">{{broker.uname}}</h6>
+                            <p class="color-blue-dark mt-n3 font-9 font-400 text-center mb-0 pt-1">Broker Owner</p>
+                        </div>
+                        <div class="w-65 ps-3 pt-2">
+                            <h5 class="mb-2">Other Users</h5>
+                            <a href="#"><img src="../../assets/images/avatars/1s.png" data-src="images/avatars/1s.png"
+                                    width="40" class="rounded-circle preload-img entered loaded"
+                                    data-ll-status="loaded"></a>
+                            <a class="float-end" href="#"
+                                onclick="return confirm('Are You Sure to Remove {{broker.nuser}} ?')"><i
+                                    class="fa fa-trash text-danger"></i></a>
+                            <h6 class="font-14 font-600 mt-2">{{broker.nuser}}</h6>
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><br>
+
+
+
+
+    <div class="container mt-2">
+        <a href="#" data-menu="menu-resources"
+            class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-700 shadow-s bg-orange-light">Start
+            Dealing</a>
+        <a href="" class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-700 shadow-s bg-dark">Start
+            Chatting</a>
+
+
+    </div>
+
+
+</div>
+
+<br><br><br><br><br><br><br><br>
+
+
+
+<div id="menu-resources" class="menu menu-box-bottom rounded-m" data-menu-height="350" data-menu-effect="menu-over">
+    <div class="menu-title">
+        <h4 class="text-center mt-4 mb-4">Select Your Resource Type</h4>
+        <a href="#" class="close-menu"><i class="fa fa-times-circle"></i></a>
+    </div>
+    <div class="content">
+        <a href="#" data-menu="menu-Credentials"
+            class="btn btn-l font-14 shadow-l btn-full rounded-s font-600 bg-green-dark text-start mb-2"><span
+                class="ms-n2">Credentials</span><span class="float-end me-n1"></span></a>
+        <a href="tel:+2 234 567 890"
+            class="btn btn-l font-14 shadow-l btn-full rounded-s font-600 bg-blue-dark text-start mb-2"><span
+                class="ms-n2">Documents</span><span class="float-end me-n1"></span></a>
+        <a href="tel:+3 234 567 890"
+            class="btn btn-l font-14 shadow-l btn-full rounded-s font-600 bg-red-dark text-start"><span
+                class="ms-n2">Payment</span><span class="float-end me-n1"></span></a>
+        <a href="tel:+3 234 567 890"
+            class="btn btn-l font-14 mt-2 shadow-l btn-full rounded-s font-600 bg-dark text-start"><span
+                class="ms-n2">Images</span><span class="float-end me-n1"></span></a>
+
+    </div>
+</div>
+
+
+
+<div id="menu-Credentials" class="menu menu-box-bottom rounded-m" data-menu-height="390" data-menu-effect="menu-over">
+    <div class="menu-title">
+        <h4 class="font-16 text-center mt-4 mb-4">Enter Your Credentials</h4>
+        <a href="#" class="close-menu"><i class="fa fa-times-circle"></i></a>
+    </div>
+    <div class="content mb-0 mt-0">
+        <div class="card p-4" style="border-radius: 20px;">
+            <form action="/add-credential" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="date" id="datetime">
+                <input type="hidden" name="uname" value="{{#if user}}{{user.Name}}{{/if}}">
+                <input type="hidden" name="status" value="{{#if user}}{{user.Name}}{{/if}} uploaded sucessfully">
+
+                <div class="input-style has-borders has-icon validate-field mb-4">
+                    <i class="fa fa-user"></i>
+                    <input type="name" name="username" class="form-control validate-name" id="form1acd"
+                        placeholder="Username / Email / ID" required>
+                    <label for="form1acd" class="color-highlight font-11 font-500">Username / Email / ID</label>
+                    <i class="fa fa-times disabled invalid color-red-dark"></i>
+                    <i class="fa fa-check disabled valid color-green-dark"></i>
+                    <em>(required)</em>
+                </div>
+
+                <div class="input-style has-borders has-icon validate-field mb-4">
+                    <i class="fa fa-key"></i>
+                    <input type="name" name="password" class="form-control validate-name" id="form1acd"
+                        placeholder="Password" required>
+                    <label for="form1acd" class="color-highlight font-11 font-500">Password</label>
+                    <i class="fa fa-times disabled invalid color-red-dark"></i>
+                    <i class="fa fa-check disabled valid color-green-dark"></i>
+                    <em>(required)</em>
+                </div>
+
+                <div class="input-style has-borders has-icon validate-field mb-4">
+                    <i class="fa fa-key"></i>
+                    <input type="name" name="access" class="form-control validate-name" id="form1acd"
+                        placeholder="Access Key">
+                    <label for="form1acd" class="color-highlight font-11 font-500">Access Key</label>
+                    <i class="fa fa-times disabled invalid color-red-dark"></i>
+                    <i class="fa fa-check disabled valid color-green-dark"></i>
+                    <em>(optional)</em>
+                </div>
+                <button type="submit"
+                    class="btn btn-full btn-m shadow-l mb-3 w-100 rounded-s font-600 bg-blue-dark mt-4">
+                    Upload to broker</button>
+            </form>
+        </div>
+    </div>
+</div>

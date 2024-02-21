@@ -1,0 +1,144 @@
+<div class="page-title page-title-fixed">
+    <h1>TrueTransfer</h1>
+    <!-- <a href="#" class="page-title-icon shadow-xl bg-theme color-theme" data-menu="menu-share"><i
+                    class="fa fa-share-alt"></i></a> -->
+    <a href="#" class="page-title-icon shadow-xl bg-theme color-theme show-on-theme-light" data-toggle-theme><i
+            class="fa fa-moon"></i></a>
+    <a href="#" class="page-title-icon shadow-xl bg-theme color-theme show-on-theme-dark" data-toggle-theme><i
+            class="fa fa-lightbulb color-yellow-dark"></i></a>
+    <a href="#" class="page-title-icon shadow-xl bg-theme color-theme" data-menu="menu-main"><i
+            class="fa fa-bars"></i></a>
+</div>
+<div class="page-title-clear"></div>
+
+<div id="menu-main" class="menu menu-box-left rounded-0" data-menu-width="280" data-menu-active="nav-welcome"
+    data-menu-load="/menu-main"></div>
+
+<div id="menu-share" class="menu menu-box-bottom rounded-m" data-menu-load="menu-share.html" data-menu-height="370">
+</div>
+<div id="menu-colors" class="menu menu-box-bottom rounded-m" data-menu-load="menu-colors.html" data-menu-height="480">
+</div>
+
+
+
+<div class="page-content header-clear-medium">
+
+    <div data-card-height="350" class="card card-style bg-6">
+        <div class="card-top text-start">
+            <h6 class="color-white mt-3 ms-3 font-12 font-400">Hi</h6>
+            <h6 class="color-white mt-3 ms-3 font-16 mt-n1">{{#if user}}{{user.Name}}{{/if}}</h6>
+        </div>
+        <div class="card-center text-end pe-3 pt-4">
+            <h1 class="color-white font-22 mb-0 opacity-50 text-center">Say Hello to</h1>
+            <h1 class="color-white font-36 mb-5 text-center">True Transfer</h1>
+        </div>
+        <div class="card-bottom text-start ps-3">
+            <p class="color-white mb-3 opacity-70 line-height-s">
+                Safe and simple <br> digital asset exchanger.
+            </p>
+        </div>
+        <div class="card-overlay bg-gradient opacity-60"></div>
+    </div>
+
+    <div class="card card-style p-4">
+        <h6 class="text-center mb-0 color-highlight opacity-60">THE BROKER</h6>
+        <h1 class="font-800 font-30 text-center line-height-xl">Meet Our <br>New Broker</h1>
+        <p class="font-16 opacity-80 text-center line-height-l">
+            Safe and simple digital asset exchanges. Trust, security, and ease combined for seamless resource
+            sharing. Your go-to platform for worry-free transactions
+        </p>
+        <a href="#" data-menu="menu-signup" class="btn btn-center-m btn-m gradient-blue rounded-s font-700">+
+            Create a
+            Broker</a>
+    </div>
+
+
+</div>
+<!-- End of Page Content-->
+<!-- All Menus, Action Sheets, Modals, Notifications, Toasts, Snackbars get Placed outside the <div class="page-content"> -->
+
+<!-- Menu Share -->
+
+
+<div id="menu-signup" class="menu menu-box-bottom rounded-m" data-menu-height="390" data-menu-effect="menu-over">
+    <div class="menu-title">
+        <p class="color-highlight">Create new</p>
+        <h1 class="font-24">Broker Room</h1>
+        <a href="#" class="close-menu"><i class="fa fa-times-circle"></i></a>
+    </div>
+    <div class="content mb-0 mt-0">
+        <div class="card p-4" style="border-radius: 20px;">
+            <form action="/add-broker" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="date" id="datetime">
+
+                <div class="input-style has-borders has-icon validate-field mb-4">
+                    <i class="fa fa-comment"></i>
+                    <input type="hidden" name="uname" value="{{#if user}}{{user.Name}}{{/if}}"
+                        class="form-control validate-name" id="form1acd" placeholder="Broker Name">
+
+                    <input type="name" name="bname" class="form-control validate-name" id="form1acd"
+                        placeholder="Broker Name" required>
+                    <label for="form1acd" class="color-highlight font-11 font-500">Broker Name</label>
+                    <i class="fa fa-times disabled invalid color-red-dark"></i>
+                    <i class="fa fa-check disabled valid color-green-dark"></i>
+                    <em>(required)</em>
+                </div>
+                <div class="input-style has-borders no-icon mb-4">
+                    <label for="form5" class="color-highlight">Add User</label>
+                    <select id="form5" name="nuser">
+                        <option value="default" disabled selected> <i class="fa fa-user"></i>
+                            Select a user</option>
+                        {{#each users}}
+                        <option value="{{this.Name}}">{{this.Name}}</option>
+                        {{/each}}
+                    </select>
+                    <span><i class="fa fa-chevron-down"></i></span>
+                    <i class="fa fa-check disabled valid color-green-dark"></i>
+                    <i class="fa fa-check disabled invalid color-red-dark"></i>
+                    <em></em>
+                </div>
+                <div class="input-style has-borders has-icon validate-field mb-4">
+                    <i class="fa fa-pen"></i>
+                    <input type="name" name="note" class="form-control validate-name" id="form1acd" placeholder="Note">
+                    <label for="form1acd" class="color-highlight font-11 font-500">Note</label>
+                    <i class="fa fa-times disabled invalid color-red-dark"></i>
+                    <i class="fa fa-check disabled valid color-green-dark"></i>
+                    <em>(required)</em>
+                </div>
+
+                <div class="input-style has-borders has-icon validate-field mb-4">
+                    <input type="file" name="Image" class="form-control validate-name" <em>(required)</em>
+                </div>
+
+
+
+                <p class="text-center pb-0 mb-n1 pt-1">
+                    <a href="#" data-menu="menu-signin" class="text-center font-11 color-gray2-dark">Read
+                        instructions</a>
+                </p>
+                <button type="submit"
+                    class="btn btn-full btn-m shadow-l mb-3 w-100 rounded-s font-600 bg-blue-dark mt-4">+
+                    Create</button>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+
+<script>
+    // Get current date and time
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    const hours = ((now.getHours() + 11) % 12 + 1).toString().padStart(2, '0'); // Convert to 12-hour format
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+
+    // Set default value to current date and time in MM/DD/YYYY format
+    const defaultDateTime = `${month}/${day}/${year}T${hours}:${minutes}`;
+    document.getElementById('datetime').value = defaultDateTime;
+</script>

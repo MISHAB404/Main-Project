@@ -1,0 +1,64 @@
+<div class="card card-fixed mb-n5" data-card-height="380">
+    <div class="splide single-slider slider-no-arrows slider-no-dots" id="single-slider-1">
+        <div class="splide__track">
+            <div class="splide__list">
+                <div class="splide__slide">
+                    <a href="#" class="card card-style mx-0 rounded-0 bg-6" data-card-height="380">
+                        <div class="card-bottom px-3">
+                            <h1 class="color-white mb-n1">My Broker Rooms</h1>
+                            <p class="color-white opacity-50 mb-4 pb-4">
+                                You can see all your brokers that you created in here.
+                            </p>
+                        </div>
+                        <div class="card-overlay bg-gradient"></div>
+                    </a>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card card-clear" data-card-height="380"></div>
+
+<div class="page-content pb-3">
+
+    <div class="card card-full rounded-m pb-4">
+        <div class="drag-line"></div>
+
+
+
+
+
+        <div class="content mb-3">
+            <p class="mb-n1 color-highlight font-600">True Transfer</p>
+            <h1 class="mb-4 font-800">All Brokers</h1>
+            {{#each brokers}}
+            <a href="/single-broker/:{{this._id}}" class="d-flex">
+                <div class="me-3 mb-3">
+                    <img src="/images/broker-images/{{this._id}}.png" class="rounded-sm" width="50">
+                </div>
+                <div class="me-auto">
+                    <h5 class="font-600 pt-1 mb-n1">{{this.bname}}</h5>
+                    <span class="color-theme opacity-30 font-10">Created By <b>{{this.uname}}</b> | Users :
+                        {{this.nuser}}</span>
+
+                </div>
+                <span class="badge font-10  "><a style="margin-top: -45px;" class="float-end"
+                        href="/delete-broker/{{this._id}}"
+                        onclick="return confirm('Are You Sure to Delete {{this.bname}} ?')"><i
+                            class="fa fa-trash text-danger"></i></a></span>
+            </a>
+
+
+            {{/each}}
+
+
+        </div>
+
+        <br><br><br><br><br><br><br><br>
+    </div>
+
+
+</div>
+<br><br><br><br><br>

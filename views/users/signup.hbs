@@ -1,0 +1,62 @@
+<br><br>
+<div class="card card-style mt-5">
+    <div class="content mb-0">
+        <center>
+            <img src="assets/img/login.png" width="70%">
+        </center><br>
+        <h3 class="text-center">Signup Now</h3>
+        <p class="text-center">
+            Create a new account to continue with <br> True Transfer app
+        </p>
+
+        <form action="/signup" method="post">
+            {{#if signUpErr}}
+            <div class="alert alert-danger" style="border-radius: 10px;" role="alert">
+                <ul>
+                    {{#each signUpErr}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+            {{/if}}
+            <div class="input-style has-borders has-icon validate-field mb-4">
+                <i class="fa fa-user"></i>
+                <input type="name" name="Name" value="{{formData.Name}}" class="form-control validate-name" id="form1"
+                    placeholder="Name" required>
+                <label for="form1" class="color-highlight">Name</label>
+                <i class="fa fa-times disabled invalid color-red-dark"></i>
+                <i class="fa fa-check disabled valid color-green-dark"></i>
+                <em>(required)</em>
+            </div>
+
+            <div class="input-style has-borders has-icon validate-field mb-4">
+                <i class="fa fa-envelope"></i>
+                <input type="email" name="Email" value="{{formData.Email}}" class="form-control validate-name"
+                    id="form1" placeholder="Email" required>
+                <label for="form1" class="color-highlight">Email</label>
+                <i class="fa fa-times disabled invalid color-red-dark"></i>
+                <i class="fa fa-check disabled valid color-green-dark"></i>
+                <em>(required)</em>
+            </div>
+
+            <div class="input-style has-borders has-icon validate-field mb-4">
+                <i class="fa fa-star"></i>
+                <input type="password" name="Password" value="{{formData.Password}}" class="form-control validate-name"
+                    id="form1" placeholder="Password" required>
+                <label for="form1" class="color-highlight">Password</label>
+                <i class="fa fa-times disabled invalid color-red-dark"></i>
+                <i class="fa fa-check disabled valid color-green-dark"></i>
+                <em>(required)</em>
+            </div>
+
+            <button type="submit"
+                class="btn btn-full btn-m shadow-l mb-3 w-100 rounded-s font-600 bg-blue-dark mt-4">Signup</button>
+        </form>
+
+    </div>
+    <p class="text-center mb-3">Already have an account? <a href="/signin">Signin Now</a></p>
+
+</div>
+
+
+</div>

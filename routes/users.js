@@ -1,0 +1,433 @@
+var express = require("express");
+var userHelper = require("../helper/userHelper");
+var adminHelper = require("../helper/adminHelper");
+var fs = require("fs");
+const { ObjectId } = require("mongodb"); // Make sure to import ObjectId from the MongoDB library
+
+
+var router = express.Router();
+
+const verifySignedIn = (req, res, next) => {
+  if (req.session.signedIn) {
+    next();
+  } else {
+    res.redirect("/signin");
+  }
+};
+
+router.get("/", verifySignedIn, function (req, res, next) {
+  let user = req.session.user;
+  res.render("users/signin", { admin: false, user, layout: "empty" });
+});
+
+
+///////ALL credential/////////////////////                                         
+router.get("/all-credentials", verifySignedIn, function (req, res) {
+  let administator = req.session.admin;
+  adminHelper.getAllcredentials().then((credentials) => {
+    res.render("admin/credential/all-credentials", { admin: true, layout: "", credentials, administator });
+  });
+});
+
+///////ADD credential/////////////////////                                         
+router.get("/add-credential", verifySignedIn, function (req, res) {
+  let administator = req.session.admin;
+  res.render("users/add-credential", { admin: true, layout: "", administator });
+});
+
+///////ADD credential/////////////////////                                         
+router.post("/add-credential", async function (req, res) {
+  try {
+    const brokerId = req.body.brokerId; // Assuming you have the brokerId in req.body
+
+    // Assuming addcredential returns a Promise
+    userHelper.addcredential(req.body);
+
+    // Redirect to the same single-broker route with the same id
+    res.redirect(`/single-broker/${brokerId}`);
+  } catch (error) {
+    // Handle error
+    console.error(error);
+    res.redirect("/error"); // Redirect to an error page or handle as needed
+  }
+});
+
+///////EDIT credential/////////////////////                                         
+router.get("/edit-credential/:id", verifySignedIn, async function (req, res) {
+  let administator = req.session.admin;
+  let credentialId = req.params.id;
+  let credential = await adminHelper.getcredentialDetails(credentialId);
+  console.log(credential);
+  res.render("admin/credential/edit-credential", { admin: true, layout: "", credential, administator });
+});
+
+///////EDIT credential/////////////////////                                         
+router.post("/edit-credential/:id", verifySignedIn, function (req, res) {
+  let credentialId = req.params.id;
+  adminHelper.updatecredential(credentialId, req.body).then(() => {
+    if (req.files) {
+      let image = req.files.Image;
+      if (image) {
+        image.mv("./public/images/credential-images/" + credentialId + ".png");
+      }
+    }
+    res.redirect("/admin/credential/all-credentials");
+  });
+});
+
+///////DELETE credential/////////////////////                                         
+router.get("/delete-credential/:id", verifySignedIn, function (req, res) {
+  let credentialId = req.params.id;
+  adminHelper.deletecredential(credentialId).then((response) => {
+    fs.unlinkSync("./public/images/credential-images/" + credentialId + ".png");
+    res.redirect("/admin/credential/all-credentials");
+  });
+});
+
+///////DELETE ALL credential/////////////////////                                         
+router.get("/delete-all-credentials", verifySignedIn, function (req, res) {
+  adminHelper.deleteAllcredentials().then(() => {
+    res.redirect("/admin/credential/all-credentials");
+  });
+});
+
+
+
+
+
+router.get("/menu-main", verifySignedIn, function (req, res, next) {
+  let user = req.session.user;
+  res.render("users/menu-main", { admin: false, user, layout: "" });
+});
+
+router.get("/index", verifySignedIn, function (req, res, next) {
+  user = req.session.user;
+  brokers = userHelper.getAllbrokers();
+  users = userHelper.getAllUsers();
+  userHelper.getAllUsers().then((users) => {
+    res.render("users/index", { admin: false, brokers, user, users });
+  })
+});
+
+
+router.get("/all-brokers", verifySignedIn, function (req, res) {
+  const userId = req.session.user._id; // Assuming user._id is the user identifier
+  userHelper.getAllbrokers(userId).then((brokers) => {
+    res.render("users/all-brokers", { admin: false, brokers, user: req.session.user, layout: "home" });
+  });
+});
+
+
+
+router.get("/single-broker/:id", async (req, res, next) => {
+  try {
+    let user = null;
+    if (req.session.user) {
+      user = req.session.user;
+    }
+
+    const brokerId = req.params.id; // Assuming the ID is already a valid ObjectId
+
+    if (!ObjectId.isValid(brokerId)) {
+      // Handle case when the brokerId is not a valid ObjectId
+      return res.status(400).send("Invalid broker ID");
+    }
+
+    let broker = await userHelper.getSingleBrokers(brokerId);
+
+    if (!broker) {
+      // Handle case when the broker is not found
+      return res.status(404).send("Broker not found");
+    }
+
+    console.log(broker.Name);
+    res.render("users/single-broker", {
+      admin: false,
+      back: true,
+      broker,
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+///////ADD broker/////////////////////                                         
+
+
+router.get("/add-broker", verifySignedIn, function (req, res) {
+  user = req.session.user;
+  res.render("users/all-brokers", { admin: false, layout: "", user });
+});
+
+///////ADD broker/////////////////////                                         
+router.post("/add-broker", verifySignedIn, function (req, res) {
+  const userId = req.session.user._id; // Assuming user._id is the user identifier
+  userHelper.addbroker(userId, req.body, (id) => {
+    let image = req.files.Image;
+    image.mv("./public/images/broker-images/" + id + ".png", (err, done) => {
+      if (!err) {
+        res.redirect("/all-brokers");
+      } else {
+        console.log(err);
+      }
+    });
+  });
+});
+
+
+///////EDIT broker/////////////////////                                         
+router.get("/edit-broker/:id", verifySignedIn, async function (req, res) {
+  let user = req.session.user;
+  let brokerId = req.params.id;
+  let broker = await userHelper.getbrokerDetails(brokerId);
+  console.log(broker);
+  res.render("users/edit-broker", { admin: false, layout: "", broker, user });
+});
+
+///////EDIT broker/////////////////////                                         
+router.post("/edit-broker/:id", verifySignedIn, function (req, res) {
+  let brokerId = req.params.id;
+  userHelper.updatebroker(brokerId, req.body).then(() => {
+    if (req.files) {
+      let image = req.files.Image;
+      if (image) {
+        image.mv("./public/images/broker-images/" + brokerId + ".png");
+      }
+    }
+    res.redirect("/users/all-brokers");
+  });
+});
+
+///////DELETE broker/////////////////////                                         
+router.get("/delete-broker/:id", verifySignedIn, function (req, res) {
+  let brokerId = req.params.id;
+  userHelper.deletebroker(brokerId).then((response) => {
+    fs.unlinkSync("./public/images/broker-images/" + brokerId + ".png");
+    res.redirect("/all-brokers");
+  });
+});
+
+///////DELETE ALL broker/////////////////////                                         
+router.get("/delete-all-brokers", verifySignedIn, function (req, res) {
+  userHelper.deleteAllbrokers().then(() => {
+    res.redirect("/users/all-brokers");
+  });
+});
+
+
+
+
+
+router.get("/signup", function (req, res) {
+  if (req.session.signedIn) {
+    res.redirect("/index");
+  } else {
+    res.render("users/signup", { admin: false, layout: "empty" });
+  }
+});
+
+router.post("/signup", async function (req, res) {
+  try {
+    const errors = [];
+
+    // Check if the password is at least 6 characters long
+    if (req.body.Password.length < 6) {
+      errors.push("Please enter at least a 6-character strong password");
+    }
+
+    try {
+      const response = await userHelper.doSignup(req.body);
+      req.session.signedIn = true;
+      req.session.user = response;
+      res.redirect("/index");
+    } catch (error) {
+      console.error(error);
+
+      // Check if the error is a MongoDB duplicate key error
+      if (error && error.message && error.message.includes("duplicate key error")) {
+        console.log("Email already exists error:", error.message);
+        errors.push("Email already exists");
+      } else {
+        console.log("Other error:", error.message);
+        errors.push("Email already exists");
+      }
+    }
+
+    // Check if there are any errors to display
+    if (errors.length > 0) {
+      // Pass entered data and errors to the template
+      res.render("users/signup", { admin: false, layout: "empty", signUpErr: errors, formData: req.body });
+    }
+  } catch (error) {
+    console.error("Unexpected error:", error);
+    // Handle unexpected errors, log them, and render an appropriate error page
+    res.render("error", { message: "An unexpected error occurred", error });
+  }
+});
+
+
+
+
+router.get("/signin", function (req, res) {
+  if (req.session.signedIn) {
+    res.redirect("/index");
+  } else {
+    res.render("users/signin", {
+      admin: false,
+      layout: "empty",
+      signInErr: req.session.signInErr,
+    });
+    req.session.signInErr = null;
+  }
+});
+
+router.post("/signin", function (req, res) {
+  userHelper.doSignin(req.body).then((response) => {
+    if (response.status) {
+      req.session.signedIn = true;
+      req.session.user = response.user;
+      res.redirect("/index");
+    } else {
+      req.session.signInErr = "Invalid Email/Password";
+      res.redirect("/signin");
+    }
+  });
+});
+
+router.get("/signout", function (req, res) {
+  req.session.signedIn = false;
+  req.session.user = null;
+  res.redirect("/");
+});
+
+router.get("/cart", verifySignedIn, async function (req, res) {
+  let user = req.session.user;
+  let userId = req.session.user._id;
+  let cartCount = await userHelper.getCartCount(userId);
+  let cartProducts = await userHelper.getCartProducts(userId);
+  let total = null;
+  if (cartCount != 0) {
+    total = await userHelper.getTotalAmount(userId);
+  }
+  res.render("users/cart", {
+    admin: false,
+    user,
+    cartCount,
+    cartProducts,
+    total,
+  });
+});
+
+router.get("/add-to-cart/:id", function (req, res) {
+  console.log("api call");
+  let productId = req.params.id;
+  let userId = req.session.user._id;
+  userHelper.addToCart(productId, userId).then(() => {
+    res.json({ status: true });
+  });
+});
+
+router.post("/change-product-quantity", function (req, res) {
+  console.log(req.body);
+  userHelper.changeProductQuantity(req.body).then((response) => {
+    res.json(response);
+  });
+});
+
+router.post("/remove-cart-product", (req, res, next) => {
+  userHelper.removeCartProduct(req.body).then((response) => {
+    res.json(response);
+  });
+});
+
+router.get("/place-order", verifySignedIn, async (req, res) => {
+  let user = req.session.user;
+  let userId = req.session.user._id;
+  let cartCount = await userHelper.getCartCount(userId);
+  let total = await userHelper.getTotalAmount(userId);
+  res.render("users/place-order", { admin: false, user, cartCount, total });
+});
+
+router.post("/place-order", async (req, res) => {
+  let user = req.session.user;
+  let products = await userHelper.getCartProductList(req.body.userId);
+  let totalPrice = await userHelper.getTotalAmount(req.body.userId);
+  userHelper
+    .placeOrder(req.body, products, totalPrice, user)
+    .then((orderId) => {
+      if (req.body["payment-method"] === "COD") {
+        res.json({ codSuccess: true });
+      } else {
+        userHelper.generateRazorpay(orderId, totalPrice).then((response) => {
+          res.json(response);
+        });
+      }
+    });
+});
+
+router.post("/verify-payment", async (req, res) => {
+  console.log(req.body);
+  userHelper
+    .verifyPayment(req.body)
+    .then(() => {
+      userHelper.changePaymentStatus(req.body["order[receipt]"]).then(() => {
+        res.json({ status: true });
+      });
+    })
+    .catch((err) => {
+      res.json({ status: false, errMsg: "Payment Failed" });
+    });
+});
+
+router.get("/order-placed", verifySignedIn, async (req, res) => {
+  let user = req.session.user;
+  let userId = req.session.user._id;
+  let cartCount = await userHelper.getCartCount(userId);
+  res.render("users/order-placed", { admin: false, user, cartCount });
+});
+
+router.get("/orders", verifySignedIn, async function (req, res) {
+  let user = req.session.user;
+  let userId = req.session.user._id;
+  let cartCount = await userHelper.getCartCount(userId);
+  let orders = await userHelper.getUserOrder(userId);
+  res.render("users/orders", { admin: false, user, cartCount, orders });
+});
+
+router.get(
+  "/view-ordered-products/:id",
+  verifySignedIn,
+  async function (req, res) {
+    let user = req.session.user;
+    let userId = req.session.user._id;
+    let cartCount = await userHelper.getCartCount(userId);
+    let orderId = req.params.id;
+    let products = await userHelper.getOrderProducts(orderId);
+    res.render("users/order-products", {
+      admin: false,
+      user,
+      cartCount,
+      products,
+    });
+  }
+);
+
+router.get("/cancel-order/:id", verifySignedIn, function (req, res) {
+  let orderId = req.params.id;
+  userHelper.cancelOrder(orderId).then(() => {
+    res.redirect("/orders");
+  });
+});
+
+router.post("/search", verifySignedIn, async function (req, res) {
+  let user = req.session.user;
+  let userId = req.session.user._id;
+  let cartCount = await userHelper.getCartCount(userId);
+  userHelper.searchProduct(req.body).then((response) => {
+    res.render("users/search-result", { admin: false, user, cartCount, response });
+  });
+});
+
+module.exports = router;
