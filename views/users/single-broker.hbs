@@ -129,6 +129,7 @@
         <div class="card p-4" style="border-radius: 20px;">
             <form action="/add-credential" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="date" id="datetime">
+                <input value="" id="b_id" name="brokerId" hidden>
                 <input type="hidden" name="uname" value="{{#if user}}{{user.Name}}{{/if}}">
                 <input type="hidden" name="status" value="{{#if user}}{{user.Name}}{{/if}} uploaded sucessfully">
 
@@ -168,3 +169,9 @@
         </div>
     </div>
 </div>
+<script>
+    const hiddenTextBox = document.getElementById('b_id');
+
+// Set the value of the hidden text box
+hiddenTextBox.value = window.location.href.split('/').pop();
+</script>

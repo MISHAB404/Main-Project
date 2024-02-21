@@ -20,7 +20,7 @@ module.exports = {
       .insertOne(credential)
       .then((data) => {
         console.log(data);
-        callback(data.ops[0]._id);
+        return(data);
       });
   },
 

@@ -126,15 +126,15 @@ router.get("/all-brokers", verifySignedIn, function (req, res) {
 
 
 router.get("/single-broker/:id", async (req, res, next) => {
+  let id =req.params.id;
   let user = null;
   if (req.session.user) {
     user = req.session.user;
   }
   let broker = await userHelper
-    .getSingleBrokers(req.params.id.replace(":", ""))
+    .getSingleBrokers(id)
     .then((response) => {
       var broker = response[0];
-      console.log(response[0].Name);
       res.render("users/single-broker", {
         admin: false,
         back: true,
