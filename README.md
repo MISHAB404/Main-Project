@@ -27,10 +27,10 @@ The existing system for digital asset transactions, particularly in the context 
 The proposed True Transfer application aims to address the aforementioned challenges by introducing a secure, standardized, and user-friendly platform for digital asset trans- actions. The subsequent sections will delve into the specific features, functionalities, and design principles of the proposed system, highlighting the anticipated benefits for users and administrators alike.
 
 ---
-![Alt Text](1.png)
-![Alt Text](2.png)
-![Alt Text](3.png)
-![Alt Text](4.png)
+![Alt Text](readme-img/1.png)
+![Alt Text](readme-img/2.png)
+![Alt Text](readme-img/3.png)
+![Alt Text](readme-img/4.png)
 
 
 
