@@ -70,12 +70,11 @@
         <div class="card p-4" style="border-radius: 20px;">
             <form action="/add-broker" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="date" id="datetime">
+                <input type="hidden" name="uname" value="{{#if user}}{{user.Name}}{{/if}}">
+                <input type="hidden" name="bid" id="hello">
 
                 <div class="input-style has-borders has-icon validate-field mb-4">
                     <i class="fa fa-comment"></i>
-                    <input type="hidden" name="uname" value="{{#if user}}{{user.Name}}{{/if}}"
-                        class="form-control validate-name" id="form1acd" placeholder="Broker Name">
-
                     <input type="name" name="bname" class="form-control validate-name" id="form1acd"
                         placeholder="Broker Name" required>
                     <label for="form1acd" class="color-highlight font-11 font-500">Broker Name</label>
@@ -127,6 +126,22 @@
 
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        generateRandomNumericCode();
+    });
+
+    function generateRandomNumericCode() {
+        // Generate a random 5-digit numeric code
+        const randomCode = Math.floor(10000 + Math.random() * 90000);
+
+        // Set the value of the input field
+        document.getElementById('hello').value = randomCode;
+
+        // Log the generated code to the console (optional)
+        console.log('Generated Code:', randomCode);
+    }
+</script>
 
 <script>
     // Get current date and time

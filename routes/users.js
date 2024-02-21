@@ -21,18 +21,24 @@ router.get("/", verifySignedIn, function (req, res, next) {
 });
 
 
+router.get("/chat", verifySignedIn, function (req, res, next) {
+  let user = req.session.user;
+  res.render("users/chat", { admin: false, user, layout: "home" });
+});
+
+
 ///////ALL credential/////////////////////                                         
 router.get("/all-credentials", verifySignedIn, function (req, res) {
-  let administator = req.session.admin;
-  adminHelper.getAllcredentials().then((credentials) => {
-    res.render("admin/credential/all-credentials", { admin: true, layout: "", credentials, administator });
+  let user = req.session.user;
+  userHelper.getAllcredentials().then((credentials) => {
+    res.render("admin/credential/all-credentials", { admin: false, layout: "", credentials, user });
   });
 });
 
 ///////ADD credential/////////////////////                                         
 router.get("/add-credential", verifySignedIn, function (req, res) {
-  let administator = req.session.admin;
-  res.render("users/add-credential", { admin: true, layout: "", administator });
+  let user = req.session.user;
+  res.render("users/add-credential", { admin: false, layout: "", user });
 });
 
 ///////ADD credential/////////////////////                                         
@@ -54,17 +60,17 @@ router.post("/add-credential", async function (req, res) {
 
 ///////EDIT credential/////////////////////                                         
 router.get("/edit-credential/:id", verifySignedIn, async function (req, res) {
-  let administator = req.session.admin;
+  let user = req.session.user;
   let credentialId = req.params.id;
-  let credential = await adminHelper.getcredentialDetails(credentialId);
+  let credential = await userHelper.getcredentialDetails(credentialId);
   console.log(credential);
-  res.render("admin/credential/edit-credential", { admin: true, layout: "", credential, administator });
+  res.render("admin/credential/edit-credential", { admin: false, layout: "", credential, user });
 });
 
 ///////EDIT credential/////////////////////                                         
 router.post("/edit-credential/:id", verifySignedIn, function (req, res) {
   let credentialId = req.params.id;
-  adminHelper.updatecredential(credentialId, req.body).then(() => {
+  userHelper.updatecredential(credentialId, req.body).then(() => {
     if (req.files) {
       let image = req.files.Image;
       if (image) {
@@ -78,7 +84,7 @@ router.post("/edit-credential/:id", verifySignedIn, function (req, res) {
 ///////DELETE credential/////////////////////                                         
 router.get("/delete-credential/:id", verifySignedIn, function (req, res) {
   let credentialId = req.params.id;
-  adminHelper.deletecredential(credentialId).then((response) => {
+  userHelper.deletecredential(credentialId).then((response) => {
     fs.unlinkSync("./public/images/credential-images/" + credentialId + ".png");
     res.redirect("/admin/credential/all-credentials");
   });
@@ -86,7 +92,7 @@ router.get("/delete-credential/:id", verifySignedIn, function (req, res) {
 
 ///////DELETE ALL credential/////////////////////                                         
 router.get("/delete-all-credentials", verifySignedIn, function (req, res) {
-  adminHelper.deleteAllcredentials().then(() => {
+  userHelper.deleteAllcredentials().then(() => {
     res.redirect("/admin/credential/all-credentials");
   });
 });
@@ -120,37 +126,22 @@ router.get("/all-brokers", verifySignedIn, function (req, res) {
 
 
 router.get("/single-broker/:id", async (req, res, next) => {
-  try {
-    let user = null;
-    if (req.session.user) {
-      user = req.session.user;
-    }
-
-    const brokerId = req.params.id; // Assuming the ID is already a valid ObjectId
-
-    if (!ObjectId.isValid(brokerId)) {
-      // Handle case when the brokerId is not a valid ObjectId
-      return res.status(400).send("Invalid broker ID");
-    }
-
-    let broker = await userHelper.getSingleBrokers(brokerId);
-
-    if (!broker) {
-      // Handle case when the broker is not found
-      return res.status(404).send("Broker not found");
-    }
-
-    console.log(broker.Name);
-    res.render("users/single-broker", {
-      admin: false,
-      back: true,
-      broker,
-      user,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal Server Error");
+  let user = null;
+  if (req.session.user) {
+    user = req.session.user;
   }
+  let broker = await userHelper
+    .getSingleBrokers(req.params.id.replace(":", ""))
+    .then((response) => {
+      var broker = response[0];
+      console.log(response[0].Name);
+      res.render("users/single-broker", {
+        admin: false,
+        back: true,
+        broker,
+        user,
+      });
+    });
 });
 
 ///////ADD broker/////////////////////                                         
