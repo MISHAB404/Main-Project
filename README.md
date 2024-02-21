@@ -3,7 +3,7 @@
 ---
 
 ## Introduction
-In the dynamic digital landscape, exchanging valuable assets like social media or gaming accounts poses significant risks due to scams and fraud. Traditional peer-to-peer methods lack security measures, creating a need for a solution. Enter the Resource-Sharing Broker, an innovative platform acting as a secure intermediary for transparent and secure digital asset transactions. It incorporates advanced verification, a user-centric reputation system, and blockchain integration for immutable transaction records. Users can create dedicated broker rooms, ensuring controlled and monitored environments for secure transactions. The platform, powered by Flutter, Node.js, and MongoDB, redefines digital transactions with enhanced trust and security, setting a standard for secure online resource sharing.
+In the dynamic digital landscape, exchanging valuable assets like social media or gaming accounts poses significant risks due to scams and fraud. Traditional peer-to-peer methods lack security measures, creating a need for a solution. Enter the Resource-Sharing Broker, an innovative platform acting as a secure intermediary for transparent and secure digital asset transactions. It incorporates advanced verification, a user-centric reputation system, and blockchain integration for immutable transaction records. Users can create dedicated broker rooms, ensuring controlled and monitored environments for secure transactions. The platform, powered by HBS, PWA, Node.js, and MongoDB, redefines digital transactions with enhanced trust and security, setting a standard for secure online resource sharing.
 
 ## Objectives
 1. Primary Objectives :
