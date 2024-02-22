@@ -20,21 +20,22 @@ module.exports = {
       .insertOne(credential)
       .then((data) => {
         console.log(data);
-        return(data);
+        return (data);
       });
   },
 
   ///////GET ALL credential/////////////////////                                            
-  getAllcredentials: () => {
+  getAllcredentials: (brokerId) => {
     return new Promise(async (resolve, reject) => {
       let credentials = await db
         .get()
         .collection(collections.CREDENTIAL_COLLECTION)
-        .find()
+        .find({ brokerId: objectId(brokerId) })
         .toArray();
       resolve(credentials);
     });
   },
+
 
   ///////ADD credential DETAILS/////////////////////                                            
   getcredentialDetails: (credentialId) => {

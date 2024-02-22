@@ -35,8 +35,17 @@
             <div class="d-flex">
                 <div>
                     <h4 class="mb-2">Broker Status</h4>
-                    <p>Waiting for other users</p>
+                    {{!-- {{console.log(credentials)}} --}}
+                    {{#each credentials}}
+                    {{#if this.status}}
+                    <p>{{this.status}}</p>
+                    {{else}}
+                    <p>Broker is ready to accept your resources</p>
+                    {{/if}}
+                    {{/each}}
                 </div>
+
+
             </div>
         </div>
     </div>
@@ -172,6 +181,6 @@
 <script>
     const hiddenTextBox = document.getElementById('b_id');
 
-// Set the value of the hidden text box
-hiddenTextBox.value = window.location.href.split('/').pop();
+    // Set the value of the hidden text box
+    hiddenTextBox.value = window.location.href.split('/').pop();
 </script>

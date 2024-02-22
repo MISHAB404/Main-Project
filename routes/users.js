@@ -44,17 +44,12 @@ router.get("/add-credential", verifySignedIn, function (req, res) {
 ///////ADD credential/////////////////////                                         
 router.post("/add-credential", async function (req, res) {
   try {
-    const brokerId = req.body.brokerId; // Assuming you have the brokerId in req.body
-
-    // Assuming addcredential returns a Promise
+    const brokerId = req.body.brokerId;
     userHelper.addcredential(req.body);
-
-    // Redirect to the same single-broker route with the same id
     res.redirect(`/single-broker/${brokerId}`);
   } catch (error) {
-    // Handle error
     console.error(error);
-    res.redirect("/error"); // Redirect to an error page or handle as needed
+    res.redirect("/error");
   }
 });
 
@@ -126,10 +121,13 @@ router.get("/all-brokers", verifySignedIn, function (req, res) {
 
 
 router.get("/single-broker/:id", async (req, res, next) => {
-  let id =req.params.id;
+  let id = req.params.id;
   let user = null;
+  let credentials = null;
+
   if (req.session.user) {
     user = req.session.user;
+    credentials = await userHelper.getAllcredentials(); // Assuming getAllcredentials is an asynchronous function
   }
   let broker = await userHelper
     .getSingleBrokers(id)
@@ -140,9 +138,11 @@ router.get("/single-broker/:id", async (req, res, next) => {
         back: true,
         broker,
         user,
+        credentials, // Pass credentials to the view
       });
     });
 });
+
 
 ///////ADD broker/////////////////////                                         
 
