@@ -1,0 +1,39 @@
+insta broker
+{
+  "date": "02/22/2024T11:26",
+  "uname": "sap",
+  "bid": "41497",// unique bk
+  "bname": "insta-vector",
+  "pairedUser": "Mishab", //paired
+  **"pu_id": 65d6e1de760a8506d6681077  ////**
+  **"status":"requsted|accepted|rejected"
+  **"chats" :[
+  {sender:"userId" //uname
+  "msg":"hello",
+  },
+  {reciver:pu_id,
+  "msg":"hello"
+  },]
+  **"dealings": [ {type:"",d_id:_id,status:}]
+  "note": "password sharing room",
+  "userId": "65d6e0b63dd2b627b48b7a29"
+}
+
+
+
+
+secon date
+user collections
+{
+  "_id": {
+    "$oid": "65d6e1de760a8506d6681077"
+  },
+  "Name": "Mishab",
+  "Email": "msb@g.c",
+  "Password": "$2b$10$Qf.J/FvDDxKMl7l56wFrVObM91pWNFA1.dSvmNq8hxBXCQ04M53cS"
+  ***"brokers":[{bid,bname,status,userId}]
+}
+
+
+
+creds add type : "CREDENTIAL_COLLECTION"
