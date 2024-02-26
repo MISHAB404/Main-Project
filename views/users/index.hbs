@@ -59,8 +59,8 @@
 
 <!-- Menu Share -->
 
-
-<div id="menu-signup" class="menu menu-box-bottom rounded-m" data-menu-height="390" data-menu-effect="menu-over">
+<!-- Create Broker Room -->
+<div id="menu-signup" class="menu menu-box-bottom rounded-m" data-menu-height="550" data-menu-effect="menu-over">
     <div class="menu-title">
         <p class="color-highlight">Create new</p>
         <h1 class="font-24">Broker Room</h1>
@@ -84,8 +84,8 @@
                 </div>
                 <div class="input-style has-borders no-icon mb-4">
                     <label for="form5" class="color-highlight">Add User</label>
-                    <select id="form5" name="nuser">
-                        <option value="default" disabled selected> <i class="fa fa-user"></i>
+                    <select id="form5" name="nuser" required>
+                        <option value="" disabled selected> <i class="fa fa-user"></i>
                             Select a user</option>
                         {{#each users}}
                         <option value="{{this.Name}}">{{this.Name}}</option>
@@ -102,17 +102,17 @@
                     <label for="form1acd" class="color-highlight font-11 font-500">Note</label>
                     <i class="fa fa-times disabled invalid color-red-dark"></i>
                     <i class="fa fa-check disabled valid color-green-dark"></i>
-                    <em>(required)</em>
+                    <em>(optional)</em>
                 </div>
 
-                <div class="input-style has-borders has-icon validate-field mb-4">
-                    <input type="file" name="Image" class="form-control validate-name" <em>(required)</em>
+                <div class="input-style has-borders  validate-field mb-4">
+                    <input type="file" name="Image" class="form-control validate-name" required> <em>(required)</em>
                 </div>
 
 
 
                 <p class="text-center pb-0 mb-n1 pt-1">
-                    <a href="#" data-menu="menu-signin" class="text-center font-11 color-gray2-dark">Read
+                    <a href="#" data-menu="menu-Instruction" class="text-center font-11 color-gray2-dark">Read
                         instructions</a>
                 </p>
                 <button type="submit"
@@ -123,6 +123,39 @@
     </div>
 </div>
 </div>
+
+
+
+<!-- Instruction -->
+<div id="menu-Instruction" class="menu menu-box-bottom rounded-m" data-menu-height="550" data-menu-effect="menu-over">
+    <div class="menu-title">
+        <p class="color-highlight">Read our</p>
+        <h1 class="font-24">Instructions</h1>
+        <a href="#" class="close-menu"><i class="fa fa-times-circle"></i></a>
+    </div>
+    <div class="content mb-0 mt-0">
+        <div class="card p-4" style="border-radius: 20px;">
+            <p>
+                The proposed system operates on a structured and secure framework designed to facili- tate seamless
+                resource-sharing transactions. <br>The key operational steps are as follows:
+                <br>
+                <b>User Registration and Authentication:</b> <br>
+                • User Onboarding: Users initiate their journey by registering on the platform. The registration process
+                collects essential details, ensuring a verified and trustworthy user base. <br>
+                • Authentication Mechanism: To enhance security, the system employs a robust au- thentication mechanism.
+                Users undergo multi-factor authentication to establish their identity securely. <br>
+                <b>Creating Broker Rooms: </b><br>
+                • Room Creation: Any user, upon authentication, can create a dedicated broker room
+                for a specific resource-sharing transaction. <br>
+                • Inviting Transaction Participants: The room creator invites transaction partici- pants using unique
+                links or codes, ensuring a secure and controlled environment.
+            </p>
+        </div>
+    </div>
+</div>
+</div>
+
+
 
 
 

@@ -11,6 +11,99 @@ var instance = new Razorpay({
 
 module.exports = {
 
+  //////ADD report/////////////////////                                         
+  addreport: (report, callback) => {
+    console.log(report);
+    db.get()
+      .collection(collections.REPORT_COLLECTION)
+      .insertOne(report)
+      .then((data) => {
+        console.log(data);
+        callback(null, data);  // Invoke callback with success and data
+      })
+      .catch((error) => {
+        console.error("Error in addreport:", error);
+        callback(error, null);  // Invoke callback with error
+      });
+  },
+
+  ///////GET ALL report/////////////////////                                            
+  getAllreports: () => {
+    return new Promise(async (resolve, reject) => {
+      let reports = await db
+        .get()
+        .collection(collections.REPORT_COLLECTION)
+        .find()
+        .toArray();
+      resolve(reports);
+    });
+  },
+
+  ///////ADD report DETAILS/////////////////////                                            
+  getreportDetails: (reportId) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collections.REPORT_COLLECTION)
+        .findOne({
+          _id: objectId(reportId)
+        })
+        .then((response) => {
+          resolve(response);
+        });
+    });
+  },
+
+  ///////DELETE report/////////////////////                                            
+  deletereport: (reportId) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collections.REPORT_COLLECTION)
+        .removeOne({
+          _id: objectId(reportId)
+        })
+        .then((response) => {
+          console.log(response);
+          resolve(response);
+        });
+    });
+  },
+
+  ///////UPDATE report/////////////////////                                            
+  updatereport: (reportId, reportDetails) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collections.REPORT_COLLECTION)
+        .updateOne(
+          {
+            _id: objectId(reportId)
+          },
+          {
+            $set: {
+              Name: reportDetails.Name,
+              Category: reportDetails.Category,
+              Description: reportDetails.Description,
+            },
+          }
+        )
+        .then((response) => {
+          resolve();
+        });
+    });
+  },
+
+
+  ///////DELETE ALL report/////////////////////                                            
+  deleteAllreports: () => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collections.REPORT_COLLECTION)
+        .remove({})
+        .then(() => {
+          resolve();
+        });
+    });
+  },
+
 
   ///////ADD credential/////////////////////                                         
   addcredential: (credential, callback) => {
@@ -23,6 +116,8 @@ module.exports = {
         return (data);
       });
   },
+
+
 
   ///////GET ALL credential/////////////////////                                            
   getAllcredentials: (brokerId) => {

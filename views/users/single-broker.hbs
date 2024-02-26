@@ -35,6 +35,16 @@
             <div class="d-flex">
                 <div>
                     <h4 class="mb-2">Broker Status</h4>
+                    <!-- Add this section in your single-broker.hbs file -->
+                    {{#if successMessage}}
+                    <div class="text-success">
+                        {{broker.uname}} Credentials uploaded successfully!
+                    </div>
+                    {{/if}}
+
+                    <!-- Your existing code to display broker details and credentials -->
+                    <!-- ... -->
+
                     {{!-- {{console.log(credentials)}} --}}
                     {{#each credentials}}
                     {{#if this.status}}
@@ -94,6 +104,9 @@
             Dealing</a>
         <a href="/chat" class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-700 shadow-s bg-dark">Start
             Chatting</a>
+        <center>
+            <a href="#" data-menu="menu-report" class="text-center mt-4">Report a complaint</a>
+        </center>
 
 
     </div>
@@ -105,7 +118,7 @@
 
 
 
-<div id="menu-resources" class="menu menu-box-bottom rounded-m" data-menu-height="350" data-menu-effect="menu-over">
+<div id="menu-resources" class="menu menu-box-bottom rounded-m" data-menu-height="390" data-menu-effect="menu-over">
     <div class="menu-title">
         <h4 class="text-center mt-4 mb-4">Select Your Resource Type</h4>
         <a href="#" class="close-menu"><i class="fa fa-times-circle"></i></a>
@@ -126,10 +139,54 @@
 
     </div>
 </div>
+<!-------------------REPORTS------------------------->
+<div id="menu-report" class="menu menu-box-bottom rounded-m" data-menu-height="410" data-menu-effect="menu-over">
+    <div class="menu-title">
+        <h4 class="font-16 text-center mt-4 mb-4">Report a complaint</h4>
+        <a href="#" class="close-menu"><i class="fa fa-times-circle"></i></a>
+    </div>
+    <div class="content mb-0 mt-0">
+        <div class="card p-4" style="border-radius: 20px;">
+            <form action="/add-report" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="date" id="datetime">
+                <input value="" id="b_id" name="brokerId" hidden>
+                <input type="hidden" name="bid" id="hello">
+                <input type="hidden" name="uname" value="{{#if user}}{{user.Name}}{{/if}}">
 
 
 
-<div id="menu-Credentials" class="menu menu-box-bottom rounded-m" data-menu-height="390" data-menu-effect="menu-over">
+                <div class="input-style has-borders has-icon validate-field mb-4">
+                    <i class="fa fa-user"></i>
+                    <input type="text" name="sub" class="form-control validate-name" id="form1acd" placeholder="Subject"
+                        required>
+                    <label for="form1acd" class="color-highlight font-11 font-500">Subject</label>
+                    <i class="fa fa-times disabled invalid color-red-dark"></i>
+                    <i class="fa fa-check disabled valid color-green-dark"></i>
+                    <em>(required)</em>
+                </div>
+
+                <div class="input-style has-borders no-icon mb-4">
+                    <textarea id="form7" name="msg" placeholder="Enter your message" required></textarea>
+                    <label for="form7" class="color-highlight">Enter Your Message</label>
+                    <em class="mt-n3">(required)</em>
+                </div>
+                <div class="input-style has-borders  validate-field mb-4">
+                    <input type="file" name="Image" class="form-control validate-name" id="form1acd"
+                        placeholder="Subject">
+                    <label for="form1acd" class="color-highlight font-11 font-500">Subject</label>
+                    <em>(optional)</em>
+                </div>
+                <button type="submit"
+                    class="btn btn-full btn-m shadow-l mb-3 w-100 rounded-s font-600 bg-blue-dark mt-4">
+                    Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-------------------Credentials------------------------->
+<div id="menu-Credentials" class="menu menu-box-bottom rounded-m" data-menu-height="550" data-menu-effect="menu-over">
     <div class="menu-title">
         <h4 class="font-16 text-center mt-4 mb-4">Enter Your Credentials</h4>
         <a href="#" class="close-menu"><i class="fa fa-times-circle"></i></a>
@@ -139,8 +196,30 @@
             <form action="/add-credential" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="date" id="datetime">
                 <input value="" id="b_id" name="brokerId" hidden>
+                <input type="hidden" name="category" value="Credentials">
                 <input type="hidden" name="uname" value="{{#if user}}{{user.Name}}{{/if}}">
                 <input type="hidden" name="status" value="{{#if user}}{{user.Name}}{{/if}} uploaded sucessfully">
+
+                <div class="input-style has-borders no-icon mb-4">
+                    <label for="form5" class="color-highlight">Type</label>
+                    <select id="form5" name="type" onchange="handleSelectChange(this)">
+                        <option value="default" disabled="" selected="">Select</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="Facebook">Facebook</option>
+                        <option value="Twitter">Twitter</option>
+                        <option value="Pubg">Pubg</option>
+                        <option value="Freefire">Freefire</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <span><i class="fa fa-chevron-down"></i></span>
+                    <em></em>
+
+                    <!-- Hidden input field for "Other" option -->
+                    <div id="otherInput" class="mt-3" style="display: none;">
+                        <label for="otherValue" class="color-highlight">Other Category</label>
+                        <input name="type" type="text" id="otherValue" placeholder="Enter the name" required>
+                    </div>
+                </div>
 
                 <div class="input-style has-borders has-icon validate-field mb-4">
                     <i class="fa fa-user"></i>
@@ -183,4 +262,51 @@
 
     // Set the value of the hidden text box
     hiddenTextBox.value = window.location.href.split('/').pop();
+</script>
+
+<script>
+    function handleSelectChange(selectElement) {
+        var otherInput = document.getElementById('otherInput');
+        var otherValueInput = document.getElementById('otherValue');
+
+        if (selectElement.value === 'other') {
+            otherInput.style.display = 'block';
+            otherValueInput.required = true; // Make the input field required if "Other" is selected
+        } else {
+            otherInput.style.display = 'none';
+            otherValueInput.required = false; // Make the input field not required if "Other" is not selected
+        }
+    }
+</script>
+
+<script>
+    // Get current date and time
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    const hours = ((now.getHours() + 11) % 12 + 1).toString().padStart(2, '0'); // Convert to 12-hour format
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+
+    // Set default value to current date and time in MM/DD/YYYY format
+    const defaultDateTime = `${month}/${day}/${year}T${hours}:${minutes}`;
+    document.getElementById('datetime').value = defaultDateTime;
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        generateRandomNumericCode();
+    });
+
+    function generateRandomNumericCode() {
+        // Generate a random 5-digit numeric code
+        const randomCode = Math.floor(10000 + Math.random() * 90000);
+
+        // Set the value of the input field
+        document.getElementById('hello').value = randomCode;
+
+        // Log the generated code to the console (optional)
+        console.log('Generated Code:', randomCode);
+    }
 </script>

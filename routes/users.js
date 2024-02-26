@@ -27,6 +27,107 @@ router.get("/chat", verifySignedIn, function (req, res, next) {
 });
 
 
+///////ALL report/////////////////////                                         
+router.get("/all-reports", verifySignedIn, function (req, res) {
+  let user = req.session.user;
+  userHelper.getAllreports().then((reports) => {
+    res.render("users/all-reports", { admin: false, layout: "home", reports, user });
+  });
+});
+
+///////ADD report/////////////////////                                         
+// router.get("/add-report", verifySignedIn, function (req, res) {
+//   let user = req.session.user;
+//   res.render("users/add-report", { admin: false, layout: "home", user });
+// });
+
+// ///////ADD report/////////////////////                                         
+// router.post("/add-report", function (req, res) {
+//   adminHelper.addreport(req.body, (id) => {
+//     let image = req.files.Image;
+//     image.mv("./public/images/report-images/" + id + ".png", (err, done) => {
+//       if (!err) {
+//         res.redirect("/users/all-reports");
+//       } else {
+//         console.log(err);
+//       }
+//     });
+//   });
+// });
+
+router.get("/add-report", verifySignedIn, function (req, res) {
+  let user = req.session.user;
+  res.render("users/add-report", { admin: false, layout: "", user });
+});
+
+///////ADD report/////////////////////                                         
+router.post("/add-report", async function (req, res) {
+  try {
+    userHelper.addreport(req.body, async (id) => {
+      // Handle file upload
+      if (req.files && req.files.Image) {
+        let image = req.files.Image;
+        image.mv("./public/images/report-images/" + id + ".png", (err, done) => {
+          if (err) {
+            console.error("Error uploading image:", err);
+            // Handle error, maybe redirect to an error page
+            res.redirect("/error");
+            return;
+          }
+          console.log("Image uploaded successfully");
+        });
+      }
+
+      // Redirect with success query parameter
+      res.redirect(`/single-broker/${req.body.brokerId}`);
+    });
+  } catch (error) {
+    console.error(error);
+    res.redirect("/error");
+  }
+});
+
+
+
+///////EDIT report/////////////////////                                         
+router.get("/edit-report/:id", verifySignedIn, async function (req, res) {
+  let user = req.session.user;
+  let reportId = req.params.id;
+  let report = await adminHelper.getreportDetails(reportId);
+  console.log(report);
+  res.render("users/edit-report", { admin: false, layout: "home", report, user });
+});
+
+///////EDIT report/////////////////////                                         
+router.post("/edit-report/:id", verifySignedIn, function (req, res) {
+  let reportId = req.params.id;
+  adminHelper.updatereport(reportId, req.body).then(() => {
+    if (req.files) {
+      let image = req.files.Image;
+      if (image) {
+        image.mv("./public/images/report-images/" + reportId + ".png");
+      }
+    }
+    res.redirect("/users/all-reports");
+  });
+});
+
+///////DELETE report/////////////////////                                         
+router.get("/delete-report/:id", verifySignedIn, function (req, res) {
+  let reportId = req.params.id;
+  adminHelper.deletereport(reportId).then((response) => {
+    fs.unlinkSync("./public/images/report-images/" + reportId + ".png");
+    res.redirect("/users/all-reports");
+  });
+});
+
+///////DELETE ALL report/////////////////////                                         
+router.get("/delete-all-reports", verifySignedIn, function (req, res) {
+  adminHelper.deleteAllreports().then(() => {
+    res.redirect("/users/all-reports");
+  });
+});
+
 ///////ALL credential/////////////////////                                         
 router.get("/all-credentials", verifySignedIn, function (req, res) {
   let user = req.session.user;
@@ -46,12 +147,14 @@ router.post("/add-credential", async function (req, res) {
   try {
     const brokerId = req.body.brokerId;
     userHelper.addcredential(req.body);
-    res.redirect(`/single-broker/${brokerId}`);
+    // Redirect with success query parameter
+    res.redirect(`/single-broker/${brokerId}?success=true`);
   } catch (error) {
     console.error(error);
     res.redirect("/error");
   }
 });
+
 
 ///////EDIT credential/////////////////////                                         
 router.get("/edit-credential/:id", verifySignedIn, async function (req, res) {
@@ -136,6 +239,7 @@ router.get("/single-broker/:id", async (req, res, next) => {
       res.render("users/single-broker", {
         admin: false,
         back: true,
+        successMessage: req.query.success,
         broker,
         user,
         credentials, // Pass credentials to the view
