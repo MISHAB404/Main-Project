@@ -84,11 +84,11 @@
                 </div>
                 <div class="input-style has-borders no-icon mb-4">
                     <label for="form5" class="color-highlight">Add User</label>
-                    <select id="form5" name="nuser" required>
+                    <select id="form5" name="pairedUser" required>
                         <option value="" disabled selected> <i class="fa fa-user"></i>
                             Select a user</option>
                         {{#each users}}
-                        <option value="{{this.Name}}">{{this.Name}}</option>
+                        <option value="{{this.Name}}|{{this._id}}">{{this.Name}}</option>
                         {{/each}}
                     </select>
                     <span><i class="fa fa-chevron-down"></i></span>

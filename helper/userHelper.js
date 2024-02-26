@@ -222,8 +222,14 @@ module.exports = {
   ///////ADD broker/////////////////////                                         
   addbroker: (userId, broker, callback) => {
     console.log(broker);
-    // Add userId to the broker data
+    // Add userId to the broker data]
+    let [name, id] = broker.pairedUser.split('|').map(item => item.trim());
     broker.userId = userId;
+    broker.pairedUser=name;
+    broker.pu_id=id;
+    broker.status="accepted"
+    broker.chats=[];
+    broker.dealings=[];
 
     db.get()
       .collection(collections.BROKER_COLLECTION)
@@ -241,7 +247,7 @@ module.exports = {
       let brokers = await db
         .get()
         .collection(collections.BROKER_COLLECTION)
-        .find({ userId: userId }) // Filter brokers based on userId
+        .find({ $or: [{ userId: userId }, { pu_id: userId }] }) // Filter brokers based on userId
         .toArray();
       resolve(brokers);
     });
@@ -341,6 +347,7 @@ module.exports = {
 
       // If the email is not registered, proceed with user registration
       userData.Password = await bcrypt.hash(userData.Password, 10);
+      userData.brokers=[];
       db.get()
         .collection(collections.USERS_COLLECTION)
         .insertOne(userData)
