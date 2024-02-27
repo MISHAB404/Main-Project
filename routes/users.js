@@ -137,20 +137,44 @@ router.get("/all-credentials", verifySignedIn, function (req, res) {
 });
 
 ///////ADD credential/////////////////////                                         
-router.get("/add-credential", verifySignedIn, function (req, res) {
-  let user = req.session.user;
-  res.render("users/add-credential", { admin: false, layout: "", user });
-});
+// router.get("/add-credential", verifySignedIn, function (req, res) {
+//   let user = req.session.user;
+//   res.render("users/add-credential", { admin: false, layout: "", user });
+// });
 
 ///////ADD credential/////////////////////                                         
 router.post("/add-credential", async function (req, res) {
   try {
     const brokerId = req.body.brokerId;
-    userHelper.addcredential(req.body);
+    let user_id = req.body.userId;
+    await userHelper.addcredential(req.body).then((data)=>{
+      userHelper.adddealings("Credentials",brokerId,user_id,data._id,"Payment",req.body).then(()=>{
+        res.redirect(`/single-broker/${brokerId}?success=true`);
+      })
+    })
     // Redirect with success query parameter
-    res.redirect(`/single-broker/${brokerId}?success=true`);
+   
   } catch (error) {
-    console.error(error);
+    console.error("*************errrrr:",error);
+    res.redirect("/error");
+  }
+});
+
+router.post("/add-payment", async function (req, res) {
+  try {
+
+    console.log(req.body,"*****************")
+    const brokerId = req.body.brokerId;
+    const user_id = req.body.userId;
+    await userHelper.addpayment(req.body).then((data)=>{
+      userHelper.adddealings("Payment",brokerId,user_id,data._id,"Credentials",req.body).then(()=>{
+        res.redirect(`/single-broker/${brokerId}?success=true`);
+      })
+    })
+    // Redirect with success query parameter
+   
+  } catch (error) {
+    console.error("*************errrrr:",error);
     res.redirect("/error");
   }
 });
@@ -227,6 +251,9 @@ router.get("/single-broker/:id", async (req, res, next) => {
   let id = req.params.id;
   let user = null;
   let credentials = null;
+  let usertype;
+  let transferdata;
+  let transferStatus=false;
 
   if (req.session.user) {
     user = req.session.user;
@@ -236,12 +263,60 @@ router.get("/single-broker/:id", async (req, res, next) => {
     .getSingleBrokers(id)
     .then((response) => {
       var broker = response[0];
+      if(user._id==broker.userId){
+        usertype="owner"
+      }else{
+        usertype="pairedUser"
+      }
+      if(broker.dealings.length==2){
+        let first=broker.dealings[0];
+        let second=broker.dealings[1];
+        if(first.against=="Payment" && second.against=="Credentials"){
+            if(first.usertype=="owner" && usertype =="owner"){
+              transferdata=second;
+              transferStatus=true;
+            }else if(second.usertype=="owner" && usertype =="owner"){
+              transferdata=first;
+              transferStatus=true;
+            }else if(first.usertype=="pairedUser" && usertype =="pairedUser"){
+              transferdata=second;
+              transferStatus=true;
+            }
+             else{
+              transferdata=first;
+              transferStatus=true;
+            }          
+        } else if(second.against=="Payment" && first.against=="Credentials"){
+          if(first.usertype=="owner" && usertype =="owner"){
+            transferdata=second;
+            transferStatus=true;
+          }else if(second.usertype=="owner" && usertype =="owner"){
+            transferdata=first;
+            transferStatus=true;
+          }else if(first.usertype=="pairedUser" && usertype =="pairedUser"){
+            transferdata=second;
+            transferStatus=true;
+          }
+           else{
+            transferdata=first;
+            transferStatus=true;
+          }  
+        }
+        
+      
+      }else{
+        transferStatus=false;
+      }
+
+      // console.log("usertranferrrr", transferdata, usertype)
       res.render("users/single-broker", {
         admin: false,
         back: true,
         successMessage: req.query.success,
         broker,
         user,
+        transferdata,
+        transferStatus,
         credentials, // Pass credentials to the view
       });
     });

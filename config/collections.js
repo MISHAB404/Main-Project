@@ -6,6 +6,7 @@ module.exports = {
     ORDER_COLLECTION: 'order',
     BROKER_COLLECTION: "broker",
     CREDENTIAL_COLLECTION: "credential",
+    PAYMENT_COLLECTION:"payment",
     REPORT_COLLECTION: "report",
 
 

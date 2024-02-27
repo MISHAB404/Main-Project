@@ -106,17 +106,73 @@ module.exports = {
 
 
   ///////ADD credential/////////////////////                                         
-  addcredential: (credential, callback) => {
-    console.log(credential);
+  addcredential: (credential) => {
+    console.log("i am in add_cred");
+    return new Promise((resolve, reject) => {
     db.get()
       .collection(collections.CREDENTIAL_COLLECTION)
       .insertOne(credential)
       .then((data) => {
-        console.log(data);
-        return (data);
+        resolve(data.ops[0]);
       });
+    })
   },
 
+  addpayment: (payment) => {
+    return new Promise((resolve, reject) => {
+    db.get()
+      .collection(collections.PAYMENT_COLLECTION)
+      .insertOne(payment)
+      .then((data) => {
+        resolve(data.ops[0]);
+      });
+    })
+  },
+
+  adddealings:(type,brokerId,user_id,typeDB_id,against,formdata)=>{
+    return new Promise(async (resolve, reject) => {
+      let data = await db.get().collection(collections.BROKER_COLLECTION).find({ brokerId: objectId(brokerId) }).toArray();
+      let obj={}
+      obj.type=type;
+      obj.typeDB_id=typeDB_id;
+      console.log(formdata,"rwet")
+      if(data.userId== formdata.userId ){
+        obj.d_id=data.userId ;
+        obj.usertype="owner"
+      }else{
+        obj.d_id=user_id;
+        obj.usertype="pairedUser"
+      }
+      if(against=="Payment"){
+        obj.against="Credentials"
+        obj.amount=formdata.amount;
+      }else{
+        obj.against="Payment";
+      }
+      if(formdata.category=="Credentials"){
+        obj.username=formdata.username;
+        obj.password=formdata.password;
+        obj.access=formdata.access;
+        obj.type=formdata.type[0];
+        obj.category=formdata.Credentials;
+      }else if(formdata.category=="Payment"){
+        obj.type=formdata.type[0];
+        obj.amount=formdata.amount;
+      }
+      let dealings =await db.get()
+      .collection(collections.BROKER_COLLECTION).updateOne(
+        { _id: objectId(brokerId) },
+        {
+          $push: {dealings: obj },
+        }
+      )
+      .then((response) => {
+        resolve(response);
+      });
+      
+    });
+
+  },
 
 
   ///////GET ALL credential/////////////////////                                            

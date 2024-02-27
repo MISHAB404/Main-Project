@@ -60,6 +60,44 @@
         </div>
     </div>
 
+    <div class="card card-full-center  card-style" style="margin-top: -20px;">
+        <div class="content">
+            <div class="d-flex">
+                <div>
+                    <h4 class="mb-2">Transfered Data</h4>
+                    <!-- Add this section in your single-broker.hbs file -->
+                    {{#if transferStatus}}
+                    <div class="text-success">
+                        {{#eq transferdata.Credentials "Credentials"}}
+                            {{transferdata.username}}
+                            {{transferdata.password}}
+                        {{/eq}}
+                        {{#eq transferdata.Credentials "Payment"}}
+                            {{transferdata.amount}} paid
+                        {{/eq}}
+
+                       
+                    </div>
+                    {{/if}}
+
+                    <!-- Your existing code to display broker details and credentials -->
+                    <!-- ... -->
+
+                    {{!-- {{console.log(credentials)}} --}}
+                    {{#each credentials}}
+                    {{#if this.status}}
+                    <p>{{this.status}}</p>
+                    {{else}}
+                    <p>Broker is ready to accept your resources</p>
+                    {{/if}}
+                    {{/each}}
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
 
 
 
@@ -130,7 +168,7 @@
         <a href="tel:+2 234 567 890"
             class="btn btn-l font-14 shadow-l btn-full rounded-s font-600 bg-blue-dark text-start mb-2"><span
                 class="ms-n2">Documents</span><span class="float-end me-n1"></span></a>
-        <a href="tel:+3 234 567 890"
+        <a href="#"  data-menu="menu-Payment"
             class="btn btn-l font-14 shadow-l btn-full rounded-s font-600 bg-red-dark text-start"><span
                 class="ms-n2">Payment</span><span class="float-end me-n1"></span></a>
         <a href="tel:+3 234 567 890"
@@ -195,10 +233,11 @@
         <div class="card p-4" style="border-radius: 20px;">
             <form action="/add-credential" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="date" id="datetime">
-                <input value="" id="b_id" name="brokerId" hidden>
                 <input type="hidden" name="category" value="Credentials">
                 <input type="hidden" name="uname" value="{{#if user}}{{user.Name}}{{/if}}">
                 <input type="hidden" name="status" value="{{#if user}}{{user.Name}}{{/if}} uploaded sucessfully">
+                <input type="hidden" id="user_id" value="{{#if user}}{{user._id}}{{/if}}" name="userId">
+                <input type="hidden" id="b_id" value="{{#if broker}}{{broker._id}}{{/if}}" name="brokerId">
 
                 <div class="input-style has-borders no-icon mb-4">
                     <label for="form5" class="color-highlight">Type</label>
@@ -257,11 +296,59 @@
         </div>
     </div>
 </div>
+
+<!-------------------Payment------------------------->
+<div id="menu-Payment" class="menu menu-box-bottom rounded-m" data-menu-height="550" data-menu-effect="menu-over">
+    <div class="menu-title">
+        <h4 class="font-16 text-center mt-4 mb-4">Enter Your Payment</h4>
+        <a href="#" class="close-menu"><i class="fa fa-times-circle"></i></a>
+    </div>
+    <div class="content mb-0 mt-0">
+        <div class="card p-4" style="border-radius: 20px;">
+            <form action="/add-payment" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="date" id="datetime">
+                <input type="hidden" name="category" value="Credentials">
+                <input type="hidden" name="uname" value="{{#if user}}{{user.Name}}{{/if}}">
+                <input type="hidden" name="status" value="{{#if user}}{{user.Name}}{{/if}} uploaded sucessfully">
+                <input type="hidden" id="user_id" value="{{#if user}}{{user._id}}{{/if}}" name="userId">
+                <input type="hidden" id="b_id" value="{{#if broker}}{{broker._id}}{{/if}}" name="brokerId">
+
+                <div class="input-style has-borders no-icon mb-4">
+                    <label for="form5" class="color-highlight">Payment for</label>
+                    <select id="form5" name="type" onchange="handleSelectChange(this)">
+                        <option value="default" disabled="" selected="">Select</option>
+                        <option value="Credentials">Credentials</option>
+                        <option value="Documents">Documents</option>
+                        <option value="Images">Images</option>
+                    </select>
+                    <span><i class="fa fa-chevron-down"></i></span>
+                    <em>(required)</em>
+
+                </div>
+
+                <div class="input-style has-borders has-icon validate-field mb-4">
+                    <i class="fa fa-user"></i>
+                    <input type="number" name="amount" class="form-control validate-name" id="form1acd"
+                        placeholder="Type your amount" required>
+                    <label for="form1acd" class="color-highlight font-11 font-500">Type your amount</label>
+                    <i class="fa fa-times disabled invalid color-red-dark"></i>
+                    <i class="fa fa-check disabled valid color-green-dark"></i>
+                    <em>(required)</em>
+                </div>
+
+                <button type="submit"
+                    class="btn btn-full btn-m shadow-l mb-3 w-100 rounded-s font-600 bg-blue-dark mt-4">
+                    Pays to broker</button>
+            </form>
+        </div>
+    </div>
+</div>
 <script>
     const hiddenTextBox = document.getElementById('b_id');
 
     // Set the value of the hidden text box
     hiddenTextBox.value = window.location.href.split('/').pop();
+    console.log( hiddenTextBox.value)
 </script>
 
 <script>
