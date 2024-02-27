@@ -148,7 +148,7 @@ router.post("/add-credential", async function (req, res) {
     const brokerId = req.body.brokerId;
     let user_id = req.body.userId;
     await userHelper.addcredential(req.body).then((data)=>{
-      userHelper.adddealings("Credentials",brokerId,user_id,data._id,"Payment",req.body).then(()=>{
+      userHelper.adddealings("Credentials",brokerId,user_id,data._id,"Payment",data).then(()=>{
         res.redirect(`/single-broker/${brokerId}?success=true`);
       })
     })
@@ -167,7 +167,7 @@ router.post("/add-payment", async function (req, res) {
     const brokerId = req.body.brokerId;
     const user_id = req.body.userId;
     await userHelper.addpayment(req.body).then((data)=>{
-      userHelper.adddealings("Payment",brokerId,user_id,data._id,"Credentials",req.body).then(()=>{
+      userHelper.adddealings("Payment",brokerId,user_id,data._id,"Credentials",data).then(()=>{
         res.redirect(`/single-broker/${brokerId}?success=true`);
       })
     })

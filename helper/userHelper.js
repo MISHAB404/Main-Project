@@ -130,6 +130,7 @@ module.exports = {
   },
 
   adddealings:(type,brokerId,user_id,typeDB_id,against,formdata)=>{
+    console.log("ss",formdata,formdata.username,"sdd")
     return new Promise(async (resolve, reject) => {
       let data = await db.get().collection(collections.BROKER_COLLECTION).find({ brokerId: objectId(brokerId) }).toArray();
       let obj={}
@@ -154,10 +155,11 @@ module.exports = {
         obj.password=formdata.password;
         obj.access=formdata.access;
         obj.type=formdata.type[0];
-        obj.category=formdata.Credentials;
+        obj.category=formdata.category;
       }else if(formdata.category=="Payment"){
         obj.type=formdata.type[0];
         obj.amount=formdata.amount;
+        obj.category=formdata.category;
       }
       let dealings =await db.get()
       .collection(collections.BROKER_COLLECTION).updateOne(
