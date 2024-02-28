@@ -172,6 +172,34 @@ module.exports = {
 
   },
 
+  addChat:(obj,brokerId)=>{
+    return new Promise(async (resolve, reject) => {
+      // let data = await db.get().collection(collections.BROKER_COLLECTION).find({ _id: objectId(brokerId) }).toArray();
+      let dealings =await db.get()
+      .collection(collections.BROKER_COLLECTION).updateOne(
+        { _id: objectId(brokerId) },
+        {
+          $push: {chat: obj },
+        }
+      )
+      .then((response) => {
+        resolve(response);
+      });
+      
+    });
+
+  },
+
+  getbrokers: (b_id) => {
+    return new Promise(async (resolve, reject) => {
+      let broker = await db
+        .get()
+        .collection(collections.BROKER_COLLECTION)
+        .findOne({_id:objectId(b_id)})
+      resolve(broker);
+    });
+  },
+
 
   ///////GET ALL credential/////////////////////                                            
   getAllcredentials: (brokerId) => {

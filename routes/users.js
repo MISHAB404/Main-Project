@@ -21,9 +21,39 @@ router.get("/", verifySignedIn, function (req, res, next) {
 });
 
 
-router.get("/chat", verifySignedIn, function (req, res, next) {
+router.get("/chat", verifySignedIn, async function (req, res, next) {
   let user = req.session.user;
-  res.render("users/chat", { admin: false, user, layout: "home" });
+  let pu_id=req.query.pu_id;
+  let user_id=req.query.user_id;
+  let brokerId=req.query.brokerId;
+  let usertype;
+  let brokers = await userHelper.getbrokers(brokerId);
+
+  if(user_id== user._id ){
+    usertype="sender"
+  }else{
+    usertype="reciver"
+  }
+
+  res.render("users/chat", { admin: false, user, pu_id,user_id,brokerId,brokers, usertype,layout: "home" });
+});
+
+router.post("/chat/:usertype/:user_id/:brokerId",verifySignedIn,async function (req, res, next) {
+  let user = req.session.user;
+  let brokerId=req.params.brokerId;
+  let user_id = req.params.user_id;
+  let usertype =req.params.usertype;
+  let brokers = await userHelper.getbrokers(brokerId);
+  console.log(brokers.pu_id,brokers)
+  let obj={
+    userId:user_id,
+    usertype:usertype,
+    msg:req.body.msg
+  }
+ await userHelper.addChat(obj,brokerId).then(()=>{
+  res.redirect(`/chat?pu_id=${brokers.pu_id}&user_id=${user_id}&brokerId=${brokerId}`);
+ })
+ 
 });
 
 
