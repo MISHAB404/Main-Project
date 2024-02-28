@@ -167,6 +167,7 @@ router.post("/add-payment", async function (req, res) {
     const brokerId = req.body.brokerId;
     const user_id = req.body.userId;
     await userHelper.addpayment(req.body).then((data)=>{
+      // userHelper.adddealings("Credentials",brokerId,user_id,data._id,"Payment",data).then(()=>{
       userHelper.adddealings("Payment",brokerId,user_id,data._id,"Credentials",data).then(()=>{
         res.redirect(`/single-broker/${brokerId}?success=true`);
       })
@@ -307,7 +308,7 @@ router.get("/single-broker/:id", async (req, res, next) => {
       }else{
         transferStatus=false;
       }
-
+ console.log(transferStatus,transferdata,"*************")
       // console.log("usertranferrrr", transferdata, usertype)
       res.render("users/single-broker", {
         admin: false,

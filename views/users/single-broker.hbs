@@ -68,15 +68,13 @@
                     <!-- Add this section in your single-broker.hbs file -->
                     {{#if transferStatus}}
                     <div class="text-success">
-                        {{#eq transferdata.Credentials "Credentials"}}
+                        {{#eq transferdata.against "Payment"}}
                             {{transferdata.username}}
                             {{transferdata.password}}
                         {{/eq}}
-                        {{#eq transferdata.Credentials "Payment"}}
+                        {{#eq transferdata.against "Credentials"}}
                             {{transferdata.amount}} paid
                         {{/eq}}
-
-                       
                     </div>
                     {{/if}}
 
@@ -307,9 +305,9 @@
         <div class="card p-4" style="border-radius: 20px;">
             <form action="/add-payment" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="date" id="datetime">
-                <input type="hidden" name="category" value="Credentials">
+                <input type="hidden" name="category" value="Payment">
                 <input type="hidden" name="uname" value="{{#if user}}{{user.Name}}{{/if}}">
-                <input type="hidden" name="status" value="{{#if user}}{{user.Name}}{{/if}} uploaded sucessfully">
+                <input type="hidden" name="status" value="{{#if user}}{{user.Name}}{{/if}} payment  uploaded sucessfully">
                 <input type="hidden" id="user_id" value="{{#if user}}{{user._id}}{{/if}}" name="userId">
                 <input type="hidden" id="b_id" value="{{#if broker}}{{broker._id}}{{/if}}" name="brokerId">
 

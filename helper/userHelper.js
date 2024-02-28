@@ -128,7 +128,7 @@ module.exports = {
       });
     })
   },
-
+  //userHelper.adddealings("Payment",brokerId,user_id,data._id,"Credentials",data).then(()=>{
   adddealings:(type,brokerId,user_id,typeDB_id,against,formdata)=>{
     console.log("ss",brokerId,"sdd")
     return new Promise(async (resolve, reject) => {
