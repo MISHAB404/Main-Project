@@ -130,26 +130,22 @@ module.exports = {
   },
 
   adddealings:(type,brokerId,user_id,typeDB_id,against,formdata)=>{
-    console.log("ss",formdata,formdata.username,"sdd")
+    console.log("ss",brokerId,"sdd")
     return new Promise(async (resolve, reject) => {
-      let data = await db.get().collection(collections.BROKER_COLLECTION).find({ brokerId: objectId(brokerId) }).toArray();
+      let data = await db.get().collection(collections.BROKER_COLLECTION).find({ _id: objectId(brokerId) }).toArray();
       let obj={}
       obj.type=type;
       obj.typeDB_id=typeDB_id;
-      console.log(formdata,"rwet")
-      if(data.userId== formdata.userId ){
-        obj.d_id=data.userId ;
+      console.log(data,"oener",formdata.userId ,"paird current",user_id)
+      if(data[0].userId== formdata.userId ){
+        obj.d_id=data[0].userId ;
         obj.usertype="owner"
       }else{
         obj.d_id=user_id;
         obj.usertype="pairedUser"
       }
-      if(against=="Payment"){
-        obj.against="Credentials"
-        obj.amount=formdata.amount;
-      }else{
-        obj.against="Payment";
-      }
+      obj.against=against;
+  
       if(formdata.category=="Credentials"){
         obj.username=formdata.username;
         obj.password=formdata.password;
@@ -157,7 +153,7 @@ module.exports = {
         obj.type=formdata.type[0];
         obj.category=formdata.category;
       }else if(formdata.category=="Payment"){
-        obj.type=formdata.type[0];
+        obj.type=formdata.type;
         obj.amount=formdata.amount;
         obj.category=formdata.category;
       }
