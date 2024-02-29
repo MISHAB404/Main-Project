@@ -67,13 +67,16 @@
                     <h4 class="mb-2">Transfered Data</h4>
                     <!-- Add this section in your single-broker.hbs file -->
                     {{#if transferStatus}}
-                    <div class="text-success">
+                    <div class="text-dark">
                         {{#eq transferdata.against "Payment"}}
-                            {{transferdata.username}}
-                            {{transferdata.password}}
+                        <ul>
+                            <h6>Username : </h6><b>{{transferdata.username}}</b><br>
+                            <h6>Password : </h6><b>{{transferdata.password}}</b><br>
+                            <h6>Access Key : </h6><b>{{transferdata.access}}</b><br>
+                        </ul>
                         {{/eq}}
                         {{#eq transferdata.against "Credentials"}}
-                            {{transferdata.amount}} paid
+                        {{transferdata.amount}} paid
                         {{/eq}}
                     </div>
                     {{/if}}
@@ -138,7 +141,8 @@
         <a href="#" data-menu="menu-resources"
             class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-700 shadow-s bg-orange-light">Start
             Dealing</a>
-        <a href="/chat/?pu_id={{broker.pu_id}}&user_id={{broker.userId}}&brokerId={{broker._id}}" class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-700 shadow-s bg-dark">Start
+        <a href="/chat/?pu_id={{broker.pu_id}}&user_id={{broker.userId}}&brokerId={{broker._id}}"
+            class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-700 shadow-s bg-dark">Start
             Chatting</a>
         <center>
             <a href="#" data-menu="menu-report" class="text-center mt-4">Report a complaint</a>
@@ -166,7 +170,7 @@
         <a href="tel:+2 234 567 890"
             class="btn btn-l font-14 shadow-l btn-full rounded-s font-600 bg-blue-dark text-start mb-2"><span
                 class="ms-n2">Documents</span><span class="float-end me-n1"></span></a>
-        <a href="#"  data-menu="menu-Payment"
+        <a href="#" data-menu="menu-Payment"
             class="btn btn-l font-14 shadow-l btn-full rounded-s font-600 bg-red-dark text-start"><span
                 class="ms-n2">Payment</span><span class="float-end me-n1"></span></a>
         <a href="tel:+3 234 567 890"
@@ -307,7 +311,8 @@
                 <input type="hidden" name="date" id="datetime">
                 <input type="hidden" name="category" value="Payment">
                 <input type="hidden" name="uname" value="{{#if user}}{{user.Name}}{{/if}}">
-                <input type="hidden" name="status" value="{{#if user}}{{user.Name}}{{/if}} payment  uploaded sucessfully">
+                <input type="hidden" name="status"
+                    value="{{#if user}}{{user.Name}}{{/if}} payment  uploaded sucessfully">
                 <input type="hidden" id="user_id" value="{{#if user}}{{user._id}}{{/if}}" name="userId">
                 <input type="hidden" id="b_id" value="{{#if broker}}{{broker._id}}{{/if}}" name="brokerId">
 
@@ -341,12 +346,14 @@
         </div>
     </div>
 </div>
+
+
 <script>
     const hiddenTextBox = document.getElementById('b_id');
 
     // Set the value of the hidden text box
     hiddenTextBox.value = window.location.href.split('/').pop();
-    console.log( hiddenTextBox.value)
+    console.log(hiddenTextBox.value)
 </script>
 
 <script>
@@ -394,4 +401,34 @@
         // Log the generated code to the console (optional)
         console.log('Generated Code:', randomCode);
     }
+</script>
+
+
+<script>
+    // Handle the Pays to broker button click
+    document.getElementById('payToBrokerBtn').addEventListener('click', function () {
+        var options = {
+            key: 'your-razorpay-key-id',
+            order_id: 'razorpay-order-id-from-server',
+            name: 'Your App Name',
+            description: 'Payment for broker',
+            handler: function (response) {
+                // Handle the response and redirect to the success URL
+                window.location.href = '/single-broker/' + response.notes.brokerId + '?success=true';
+            },
+            prefill: {
+                name: 'User Name',
+                contact: 'User Contact',
+                email: 'User Email',
+            },
+            notes: {
+                brokerId: 'your-broker-id',
+            },
+            theme: {
+                color: '#F37254',
+            },
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    });
 </script>

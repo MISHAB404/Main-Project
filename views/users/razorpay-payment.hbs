@@ -1,0 +1,44 @@
+<!-- razorpay-payment.hbs -->
+
+<form action="https://api.razorpay.com/v1/checkout/embedded" method="POST">
+    <input type="hidden" name="key_id" value="{{ razorpay.key_id }}">
+    <input type="hidden" name="order_id" value="{{ razorpayOrderId }}">
+    <input type="hidden" name="name" value="Your App Name">
+    <input type="hidden" name="description" value="Payment for broker">
+    <input type="hidden" name="image" value="link-to-your-logo">
+    <input type="hidden" name="prefill[name]" value="{{ user.Name }}">
+    <input type="hidden" name="prefill[contact]" value="{{ user.Contact }}">
+    <input type="hidden" name="prefill[email]" value="{{ user.Email }}">
+    <input type="hidden" name="notes[brokerId]" value="{{ brokerId }}">
+    <input type="hidden" name="callback_url" value="{{ your-callback-url }}">
+    <button type="submit">Pay Now</button>
+</form>
+
+<script>
+    // Handle the Pays to broker button click
+    document.getElementById('payToBrokerBtn').addEventListener('click', function () {
+        var options = {
+            key: 'your-razorpay-key-id',
+            order_id: 'razorpay-order-id-from-server',
+            name: 'Your App Name',
+            description: 'Payment for broker',
+            handler: function (response) {
+                // Handle the response and redirect to the success URL
+                window.location.href = '/single-broker/' + response.notes.brokerId + '?success=true';
+            },
+            prefill: {
+                name: 'User Name',
+                contact: 'User Contact',
+                email: 'User Email',
+            },
+            notes: {
+                brokerId: 'your-broker-id',
+            },
+            theme: {
+                color: '#F37254',
+            },
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    });
+</script>

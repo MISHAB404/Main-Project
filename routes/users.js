@@ -2,7 +2,13 @@ var express = require("express");
 var userHelper = require("../helper/userHelper");
 var adminHelper = require("../helper/adminHelper");
 var fs = require("fs");
+const Razorpay = require("razorpay");
 const { ObjectId } = require("mongodb"); // Make sure to import ObjectId from the MongoDB library
+
+var instance = new Razorpay({
+  key_id: "rzp_test_8NokNgt8cA3Hdv",
+  key_secret: "xPzG53EXxT8PKr34qT7CTFm9",
+});
 
 
 var router = express.Router();
@@ -23,37 +29,37 @@ router.get("/", verifySignedIn, function (req, res, next) {
 
 router.get("/chat", verifySignedIn, async function (req, res, next) {
   let user = req.session.user;
-  let pu_id=req.query.pu_id;
-  let user_id=req.query.user_id;
-  let brokerId=req.query.brokerId;
+  let pu_id = req.query.pu_id;
+  let user_id = req.query.user_id;
+  let brokerId = req.query.brokerId;
   let usertype;
   let brokers = await userHelper.getbrokers(brokerId);
 
-  if(user_id== user._id ){
-    usertype="sender"
-  }else{
-    usertype="reciver"
+  if (user_id == user._id) {
+    usertype = "sender"
+  } else {
+    usertype = "reciver"
   }
 
-  res.render("users/chat", { admin: false, user, pu_id,user_id,brokerId,brokers, usertype,layout: "home" });
+  res.render("users/chat", { admin: false, user, pu_id, user_id, brokerId, brokers, usertype, layout: "home" });
 });
 
-router.post("/chat/:usertype/:user_id/:brokerId",verifySignedIn,async function (req, res, next) {
+router.post("/chat/:usertype/:user_id/:brokerId", verifySignedIn, async function (req, res, next) {
   let user = req.session.user;
-  let brokerId=req.params.brokerId;
+  let brokerId = req.params.brokerId;
   let user_id = req.params.user_id;
-  let usertype =req.params.usertype;
+  let usertype = req.params.usertype;
   let brokers = await userHelper.getbrokers(brokerId);
-  console.log(brokers.pu_id,brokers)
-  let obj={
-    userId:user_id,
-    usertype:usertype,
-    msg:req.body.msg
+  console.log(brokers.pu_id, brokers)
+  let obj = {
+    userId: user_id,
+    usertype: usertype,
+    msg: req.body.msg
   }
- await userHelper.addChat(obj,brokerId).then(()=>{
-  res.redirect(`/chat?pu_id=${brokers.pu_id}&user_id=${user_id}&brokerId=${brokerId}`);
- })
- 
+  await userHelper.addChat(obj, brokerId).then(() => {
+    res.redirect(`/chat?pu_id=${brokers.pu_id}&user_id=${user_id}&brokerId=${brokerId}`);
+  })
+
 });
 
 
@@ -177,38 +183,52 @@ router.post("/add-credential", async function (req, res) {
   try {
     const brokerId = req.body.brokerId;
     let user_id = req.body.userId;
-    await userHelper.addcredential(req.body).then((data)=>{
-      userHelper.adddealings("Credentials",brokerId,user_id,data._id,"Payment",data).then(()=>{
+    await userHelper.addcredential(req.body).then((data) => {
+      userHelper.adddealings("Credentials", brokerId, user_id, data._id, "Payment", data).then(() => {
         res.redirect(`/single-broker/${brokerId}?success=true`);
       })
     })
     // Redirect with success query parameter
-   
+
   } catch (error) {
-    console.error("*************errrrr:",error);
+    console.error("*************errrrr:", error);
     res.redirect("/error");
   }
 });
 
-router.post("/add-payment", async function (req, res) {
+router.post('/add-payment', async function (req, res) {
   try {
-
-    console.log(req.body,"*****************")
     const brokerId = req.body.brokerId;
     const user_id = req.body.userId;
-    await userHelper.addpayment(req.body).then((data)=>{
-      // userHelper.adddealings("Credentials",brokerId,user_id,data._id,"Payment",data).then(()=>{
-      userHelper.adddealings("Payment",brokerId,user_id,data._id,"Credentials",data).then(()=>{
-        res.redirect(`/single-broker/${brokerId}?success=true`);
-      })
-    })
-    // Redirect with success query parameter
-   
+
+    const paymentData = {
+      amount: req.body.amount * 100, // Amount should be in paise
+      currency: 'INR',
+      receipt: 'payment_receipt_' + Math.floor(Math.random() * 1000),
+      payment_capture: 1,
+    };
+
+    Razorpay.orders.create(paymentData, async function (err, order) {
+      if (err) {
+        console.error(err);
+        return res.redirect('/error');
+      }
+
+      // Store the Razorpay order ID in your database or session
+      const razorpayOrderId = order.id;
+
+      // Pass the Razorpay order ID to the client-side for payment completion
+      res.render('razorpay-payment', {
+        razorpayOrderId: razorpayOrderId,
+        brokerId: brokerId,
+      });
+    });
   } catch (error) {
-    console.error("*************errrrr:",error);
-    res.redirect("/error");
+    console.error(error);
+    res.redirect('/error');
   }
 });
+
 
 
 ///////EDIT credential/////////////////////                                         
@@ -284,7 +304,7 @@ router.get("/single-broker/:id", async (req, res, next) => {
   let credentials = null;
   let usertype;
   let transferdata;
-  let transferStatus=false;
+  let transferStatus = false;
 
   if (req.session.user) {
     user = req.session.user;
@@ -294,51 +314,51 @@ router.get("/single-broker/:id", async (req, res, next) => {
     .getSingleBrokers(id)
     .then((response) => {
       var broker = response[0];
-      if(user._id==broker.userId){
-        usertype="owner"
-      }else{
-        usertype="pairedUser"
+      if (user._id == broker.userId) {
+        usertype = "owner"
+      } else {
+        usertype = "pairedUser"
       }
-      if(broker.dealings.length==2){
-        let first=broker.dealings[0];
-        let second=broker.dealings[1];
-        if(first.against=="Payment" && second.against=="Credentials"){
-            if(first.usertype=="owner" && usertype =="owner"){
-              transferdata=second;
-              transferStatus=true;
-            }else if(second.usertype=="owner" && usertype =="owner"){
-              transferdata=first;
-              transferStatus=true;
-            }else if(first.usertype=="pairedUser" && usertype =="pairedUser"){
-              transferdata=second;
-              transferStatus=true;
-            }
-             else{
-              transferdata=first;
-              transferStatus=true;
-            }          
-        } else if(second.against=="Payment" && first.against=="Credentials"){
-          if(first.usertype=="owner" && usertype =="owner"){
-            transferdata=second;
-            transferStatus=true;
-          }else if(second.usertype=="owner" && usertype =="owner"){
-            transferdata=first;
-            transferStatus=true;
-          }else if(first.usertype=="pairedUser" && usertype =="pairedUser"){
-            transferdata=second;
-            transferStatus=true;
+      if (broker.dealings.length == 2) {
+        let first = broker.dealings[0];
+        let second = broker.dealings[1];
+        if (first.against == "Payment" && second.against == "Credentials") {
+          if (first.usertype == "owner" && usertype == "owner") {
+            transferdata = second;
+            transferStatus = true;
+          } else if (second.usertype == "owner" && usertype == "owner") {
+            transferdata = first;
+            transferStatus = true;
+          } else if (first.usertype == "pairedUser" && usertype == "pairedUser") {
+            transferdata = second;
+            transferStatus = true;
           }
-           else{
-            transferdata=first;
-            transferStatus=true;
-          }  
+          else {
+            transferdata = first;
+            transferStatus = true;
+          }
+        } else if (second.against == "Payment" && first.against == "Credentials") {
+          if (first.usertype == "owner" && usertype == "owner") {
+            transferdata = second;
+            transferStatus = true;
+          } else if (second.usertype == "owner" && usertype == "owner") {
+            transferdata = first;
+            transferStatus = true;
+          } else if (first.usertype == "pairedUser" && usertype == "pairedUser") {
+            transferdata = second;
+            transferStatus = true;
+          }
+          else {
+            transferdata = first;
+            transferStatus = true;
+          }
         }
-        
-      
-      }else{
-        transferStatus=false;
+
+
+      } else {
+        transferStatus = false;
       }
- console.log(transferStatus,transferdata,"*************")
+      console.log(transferStatus, transferdata, "*************")
       // console.log("usertranferrrr", transferdata, usertype)
       res.render("users/single-broker", {
         admin: false,

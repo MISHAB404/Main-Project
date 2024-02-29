@@ -109,83 +109,83 @@ module.exports = {
   addcredential: (credential) => {
     console.log("i am in add_cred");
     return new Promise((resolve, reject) => {
-    db.get()
-      .collection(collections.CREDENTIAL_COLLECTION)
-      .insertOne(credential)
-      .then((data) => {
-        resolve(data.ops[0]);
-      });
+      db.get()
+        .collection(collections.CREDENTIAL_COLLECTION)
+        .insertOne(credential)
+        .then((data) => {
+          resolve(data.ops[0]);
+        });
     })
   },
 
   addpayment: (payment) => {
     return new Promise((resolve, reject) => {
-    db.get()
-      .collection(collections.PAYMENT_COLLECTION)
-      .insertOne(payment)
-      .then((data) => {
-        resolve(data.ops[0]);
-      });
+      db.get()
+        .collection(collections.PAYMENT_COLLECTION)
+        .insertOne(payment)
+        .then((data) => {
+          resolve(data.ops[0]);
+        });
     })
   },
   //userHelper.adddealings("Payment",brokerId,user_id,data._id,"Credentials",data).then(()=>{
-  adddealings:(type,brokerId,user_id,typeDB_id,against,formdata)=>{
-    console.log("ss",brokerId,"sdd")
+  adddealings: (type, brokerId, user_id, typeDB_id, against, formdata) => {
+    console.log("ss", brokerId, "sdd")
     return new Promise(async (resolve, reject) => {
       let data = await db.get().collection(collections.BROKER_COLLECTION).find({ _id: objectId(brokerId) }).toArray();
-      let obj={}
-      obj.type=type;
-      obj.typeDB_id=typeDB_id;
-      console.log(data,"oener",formdata.userId ,"paird current",user_id)
-      if(data[0].userId== formdata.userId ){
-        obj.d_id=data[0].userId ;
-        obj.usertype="owner"
-      }else{
-        obj.d_id=user_id;
-        obj.usertype="pairedUser"
+      let obj = {}
+      obj.type = type;
+      obj.typeDB_id = typeDB_id;
+      console.log(data, "oener", formdata.userId, "paird current", user_id)
+      if (data[0].userId == formdata.userId) {
+        obj.d_id = data[0].userId;
+        obj.usertype = "owner"
+      } else {
+        obj.d_id = user_id;
+        obj.usertype = "pairedUser"
       }
-      obj.against=against;
-  
-      if(formdata.category=="Credentials"){
-        obj.username=formdata.username;
-        obj.password=formdata.password;
-        obj.access=formdata.access;
-        obj.type=formdata.type[0];
-        obj.category=formdata.category;
-      }else if(formdata.category=="Payment"){
-        obj.type=formdata.type;
-        obj.amount=formdata.amount;
-        obj.category=formdata.category;
+      obj.against = against;
+
+      if (formdata.category == "Credentials") {
+        obj.username = formdata.username;
+        obj.password = formdata.password;
+        obj.access = formdata.access;
+        obj.type = formdata.type[0];
+        obj.category = formdata.category;
+      } else if (formdata.category == "Payment") {
+        obj.type = formdata.type;
+        obj.amount = formdata.amount;
+        obj.category = formdata.category;
       }
-      let dealings =await db.get()
-      .collection(collections.BROKER_COLLECTION).updateOne(
-        { _id: objectId(brokerId) },
-        {
-          $push: {dealings: obj },
-        }
-      )
-      .then((response) => {
-        resolve(response);
-      });
-      
+      let dealings = await db.get()
+        .collection(collections.BROKER_COLLECTION).updateOne(
+          { _id: objectId(brokerId) },
+          {
+            $push: { dealings: obj },
+          }
+        )
+        .then((response) => {
+          resolve(response);
+        });
+
     });
 
   },
 
-  addChat:(obj,brokerId)=>{
+  addChat: (obj, brokerId) => {
     return new Promise(async (resolve, reject) => {
       // let data = await db.get().collection(collections.BROKER_COLLECTION).find({ _id: objectId(brokerId) }).toArray();
-      let dealings =await db.get()
-      .collection(collections.BROKER_COLLECTION).updateOne(
-        { _id: objectId(brokerId) },
-        {
-          $push: {chat: obj },
-        }
-      )
-      .then((response) => {
-        resolve(response);
-      });
-      
+      let dealings = await db.get()
+        .collection(collections.BROKER_COLLECTION).updateOne(
+          { _id: objectId(brokerId) },
+          {
+            $push: { chat: obj },
+          }
+        )
+        .then((response) => {
+          resolve(response);
+        });
+
     });
 
   },
@@ -195,7 +195,7 @@ module.exports = {
       let broker = await db
         .get()
         .collection(collections.BROKER_COLLECTION)
-        .findOne({_id:objectId(b_id)})
+        .findOne({ _id: objectId(b_id) })
       resolve(broker);
     });
   },
@@ -307,11 +307,11 @@ module.exports = {
     // Add userId to the broker data]
     let [name, id] = broker.pairedUser.split('|').map(item => item.trim());
     broker.userId = userId;
-    broker.pairedUser=name;
-    broker.pu_id=id;
-    broker.status="accepted"
-    broker.chats=[];
-    broker.dealings=[];
+    broker.pairedUser = name;
+    broker.pu_id = id;
+    broker.status = "accepted"
+    broker.chats = [];
+    broker.dealings = [];
 
     db.get()
       .collection(collections.BROKER_COLLECTION)
@@ -429,7 +429,7 @@ module.exports = {
 
       // If the email is not registered, proceed with user registration
       userData.Password = await bcrypt.hash(userData.Password, 10);
-      userData.brokers=[];
+      userData.brokers = [];
       db.get()
         .collection(collections.USERS_COLLECTION)
         .insertOne(userData)
