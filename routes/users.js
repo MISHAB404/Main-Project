@@ -196,38 +196,11 @@ router.post("/add-credential", async function (req, res) {
   }
 });
 
-router.post('/add-payment', async function (req, res) {
-  try {
-    const brokerId = req.body.brokerId;
-    const user_id = req.body.userId;
 
-    const paymentData = {
-      amount: req.body.amount * 100, // Amount should be in paise
-      currency: 'INR',
-      receipt: 'payment_receipt_' + Math.floor(Math.random() * 1000),
-      payment_capture: 1,
-    };
 
-    Razorpay.orders.create(paymentData, async function (err, order) {
-      if (err) {
-        console.error(err);
-        return res.redirect('/error');
-      }
 
-      // Store the Razorpay order ID in your database or session
-      const razorpayOrderId = order.id;
 
-      // Pass the Razorpay order ID to the client-side for payment completion
-      res.render('razorpay-payment', {
-        razorpayOrderId: razorpayOrderId,
-        brokerId: brokerId,
-      });
-    });
-  } catch (error) {
-    console.error(error);
-    res.redirect('/error');
-  }
-});
+
 
 
 
@@ -270,7 +243,21 @@ router.get("/delete-all-credentials", verifySignedIn, function (req, res) {
   });
 });
 
-
+router.post("/add-payment", async function (req, res) {
+  try {
+    console.log(req.body)
+    const brokerId = req.body.brokerId;
+    const user_id = req.body.userId;
+    await userHelper.addpayment(req.body).then((data) => {
+      userHelper.adddealings("Payment", brokerId, user_id, data._id, "Credentials", data).then(() => {
+        res.redirect(`/single-broker/${brokerId}?success=true`);
+      })
+    })
+  } catch (error) {
+    console.error(error);
+    res.redirect("/error");
+  }
+});
 
 
 

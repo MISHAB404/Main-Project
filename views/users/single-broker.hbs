@@ -307,18 +307,18 @@
     </div>
     <div class="content mb-0 mt-0">
         <div class="card p-4" style="border-radius: 20px;">
-            <form action="/add-payment" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="date" id="datetime">
-                <input type="hidden" name="category" value="Payment">
-                <input type="hidden" name="uname" value="{{#if user}}{{user.Name}}{{/if}}">
-                <input type="hidden" name="status"
+            <form action="/add-payment" id="checkout-form" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="date" id="date">
+                <input type="hidden" id="category" name="category" value="Payment">
+                <input type="hidden" id="uname" name="uname" value="{{#if user}}{{user.Name}}{{/if}}">
+                <input type="hidden" id="status" name="status"
                     value="{{#if user}}{{user.Name}}{{/if}} payment  uploaded sucessfully">
-                <input type="hidden" id="user_id" value="{{#if user}}{{user._id}}{{/if}}" name="userId">
-                <input type="hidden" id="b_id" value="{{#if broker}}{{broker._id}}{{/if}}" name="brokerId">
+                <input type="hidden" id="user_id1" id="user_id" value="{{#if user}}{{user._id}}{{/if}}" name="userId">
+                <input type="hidden" id="b_id1" value="{{#if broker}}{{broker._id}}{{/if}}" name="brokerId">
 
                 <div class="input-style has-borders no-icon mb-4">
                     <label for="form5" class="color-highlight">Payment for</label>
-                    <select id="form5" name="type" onchange="handleSelectChange(this)">
+                    <select id="type" name="type" onchange="handleSelectChange(this)">
                         <option value="default" disabled="" selected="">Select</option>
                         <option value="Credentials">Credentials</option>
                         <option value="Documents">Documents</option>
@@ -331,14 +331,14 @@
 
                 <div class="input-style has-borders has-icon validate-field mb-4">
                     <i class="fa fa-user"></i>
-                    <input type="number" name="amount" class="form-control validate-name" id="form1acd"
+                    <input type="number" id="amount" name="amount" class="form-control validate-name" id="form1acd"
                         placeholder="Type your amount" required>
                     <label for="form1acd" class="color-highlight font-11 font-500">Type your amount</label>
                     <i class="fa fa-times disabled invalid color-red-dark"></i>
                     <i class="fa fa-check disabled valid color-green-dark"></i>
                     <em>(required)</em>
                 </div>
-
+                <input id="pay"  class="btn btn-success" type="button" name="" value="Pay Now">
                 <button type="submit"
                     class="btn btn-full btn-m shadow-l mb-3 w-100 rounded-s font-600 bg-blue-dark mt-4">
                     Pays to broker</button>
@@ -404,31 +404,80 @@
 </script>
 
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <script>
-    // Handle the Pays to broker button click
-    document.getElementById('payToBrokerBtn').addEventListener('click', function () {
-        var options = {
-            key: 'your-razorpay-key-id',
-            order_id: 'razorpay-order-id-from-server',
-            name: 'Your App Name',
-            description: 'Payment for broker',
-            handler: function (response) {
-                // Handle the response and redirect to the success URL
-                window.location.href = '/single-broker/' + response.notes.brokerId + '?success=true';
-            },
-            prefill: {
-                name: 'User Name',
-                contact: 'User Contact',
-                email: 'User Email',
-            },
-            notes: {
-                brokerId: 'your-broker-id',
-            },
-            theme: {
-                color: '#F37254',
-            },
+    $('#pay').on('click', function () {
+
+        var formData = {
+            category: document.querySelector('#category').value,
+            uname: document.querySelector("#uname").value,
+            status: document.querySelector("#status").value,
+            user_id: document.querySelector("#user_id").value,
+            b_id: document.querySelector("#b_id").value,
+            type:document.querySelector("#type").value,
+            amount:document.querySelector("#amount").value,
         };
+         var donationAmount = formData.amount;
+        const timestamp = new Date().getTime();
+        const random = Math.floor(Math.random() * 10000);
+        const orderId = `${timestamp}${random}`;
+       const amount=donationAmount*100;
+       if (donationAmount && donationAmount > 0) {
+                razorpayPayment(orderId,amount)
+                  $('#submit').prop('disabled', false);
+            } else {
+                alert('Please enter a valid donation amount.');
+            }
+               
+        });
+
+
+   /* $("#checkout-form").submit((e) => {
+        e.preventDefault();
+          $.ajax({
+                 $.ajax({
+            url: '/donateUs',
+            method: 'post',
+            data: $("#checkout-form").serialize(),
+            success: (response) => {
+     
+            }
+        })
+        
+       
+    }) */
+
+    function razorpayPayment(order,amount) {
+        var options = {
+            "key": "rzp_test_8NokNgt8cA3Hdv", // Enter the Key ID generated from the Dashboard
+            "amount": amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "Shopping Cart",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
+                verifyPayment(response, order)
+            },
+            "prefill": {
+                "name": "Gaurav Kumar",
+                "email": "gaurav.kumar@example.com",
+                "contact": "9999999999"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        }
         var rzp1 = new Razorpay(options);
-        rzp1.open();
-    });
+        rzp1.open()
+    }
+
+    function verifyPayment(payment, order) {
+      
+    }
 </script>

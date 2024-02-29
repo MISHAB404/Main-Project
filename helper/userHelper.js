@@ -11,7 +11,9 @@ var instance = new Razorpay({
 
 module.exports = {
 
-  //////ADD report/////////////////////                                         
+  //////ADD report/////////////////////    
+  
+
   addreport: (report, callback) => {
     console.log(report);
     db.get()
