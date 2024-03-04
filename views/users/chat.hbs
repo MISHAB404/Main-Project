@@ -1,8 +1,9 @@
 {{!-- user, pu_id,user_id, usertype --}}
 <div class="page-title page-title-fixed">
-    <h1>Chat {{usertype}}</h1> 
-    <a href="/all-brokers" class="page-title-icon shadow-xl bg-theme color-theme" data-menu="menu-share"><i
-            class="fas fa-chevron-left"></i></a>
+    <h1>Chat {{usertype}}</h1>
+
+    <a href="#" class="page-title-icon shadow-xl bg-theme color-theme" onclick="refreshPage()"><i
+            class="fa fa-refresh"></i></a>
     <a href="#" class="page-title-icon shadow-xl bg-theme color-theme show-on-theme-dark" data-toggle-theme=""><i
             class="fa fa-lightbulb color-yellow-dark"></i></a>
     <a href="#" class="page-title-icon shadow-xl bg-theme color-theme" data-menu="menu-main"><i
@@ -14,38 +15,38 @@
 
     <div class="content mt-0 mb-n5">
         {{#eq usertype "reciver"}}
-            {{#each brokers.chat}}
-                 {{#eq this.usertype "reciver"}}
-                    <div class="speech-bubble speech-left bg-highlight">
-                    {{this.msg}}
-                    </div>
-                   <div class="clearfix"></div>
-                {{/eq}}
-                {{#eq this.usertype "sender"}}
-                    <div class="speech-bubble speech-right color-black ">
-                    {{this.msg}}
-                    </div>
-                     <div class="clearfix"></div>
-                {{/eq}}
-            {{/each}}
+        {{#each brokers.chat}}
+        {{#eq this.usertype "reciver"}}
+        <div class="speech-bubble speech-left bg-highlight">
+            {{this.msg}}
+        </div>
+        <div class="clearfix"></div>
+        {{/eq}}
+        {{#eq this.usertype "sender"}}
+        <div class="speech-bubble speech-right color-black ">
+            {{this.msg}}
+        </div>
+        <div class="clearfix"></div>
+        {{/eq}}
+        {{/each}}
         {{/eq}}
         {{#eq usertype "sender"}}
-             {{#each brokers.chat}}
-            {{#eq this.usertype "sender"}}
-                    <div class="speech-bubble speech-left bg-highlight">
-                    {{this.msg}}
-                    </div>
-                   <div class="clearfix"></div>
-                {{/eq}}
-                {{#eq this.usertype "reciver"}}
-                    <div class="speech-bubble speech-right color-black">
-                    {{this.msg}}
-                    </div>
-                     <div class="clearfix"></div>
-                {{/eq}}
-            {{/each}}
+        {{#each brokers.chat}}
+        {{#eq this.usertype "sender"}}
+        <div class="speech-bubble speech-left bg-highlight">
+            {{this.msg}}
+        </div>
+        <div class="clearfix"></div>
         {{/eq}}
-        
+        {{#eq this.usertype "reciver"}}
+        <div class="speech-bubble speech-right color-black">
+            {{this.msg}}
+        </div>
+        <div class="clearfix"></div>
+        {{/eq}}
+        {{/each}}
+        {{/eq}}
+
     </div>
 </div>
 <!-- Page content ends here-->
@@ -55,27 +56,30 @@
     </div>
     <form action="/chat/{{usertype}}/{{user_id}}/{{brokerId}}">
         <div class="flex-fill speach-input">
-        <input type="text" name="msg" class="form-control" placeholder="Enter your Message here">
-    </div>
-    <div class="ms-3 speach-icon">
-        <a href="#" type="submit" class="gradient-highlight color-white me-2"><i class="fa fa-arrow-up pt-2"></i></a>
-    </div>
+            <input type="text" name="msg" class="form-control" placeholder="Enter your Message here">
+        </div>
+        <div class="ms-3 speach-icon">
+            <a href="#" type="submit" class="gradient-highlight color-white me-2"><i
+                    class="fa fa-arrow-up pt-2"></i></a>
+        </div>
 
     </form>
 </div> --}}
 
 <div id="footer-bar" class="d-flex" style="transform: translateX(0px);">
-     
-    <div class="me-3 speach-icon">
+
+    {{!-- <div class="me-3 speach-icon">
         <a href="#" data-menu="menu-upload" class="bg-gray-dark ms-2"><i class="fa fa-plus pt-2"></i></a>
-    </div>
+    </div> --}}
     <form action="/chat/{{usertype}}/{{user_id}}/{{brokerId}}" method="post">
-    <div class="flex-fill speach-input">
-        <input type="text" class="form-control"  name="msg" placeholder="Enter your Message here">
-    </div>
-    <div class="ms-3 speach-icon">
-        <button type="submit" class="gradient-highlight color-white me-2"><i class="fa fa-arrow-up pt-2"></i></button>
-    </div>
+        <div class="flex-fill ms-3 speach-input">
+            <input type="text" class="form-control w-100" name="msg" placeholder="Enter your Message here">
+        </div>
+
+        <div class="ms-3 speach-icon">
+            <a href="#" type="submit" class="gradient-highlight color-white me-2"><i
+                    class="fa fa-arrow-up pt-2"></i></a>
+        </div>
     </form>
 </div>
 
@@ -108,3 +112,12 @@
         </a>
     </div>
 </div>
+
+
+
+<script>
+    function refreshPage() {
+        // Reload the current page
+        location.reload();
+    }
+</script>

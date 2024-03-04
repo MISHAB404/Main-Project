@@ -1,3 +1,6 @@
+<style>
+    @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css");
+</style>
 <div class="page-title page-title-fixed" style="opacity: 1;">
     <h1>{{broker.bname}}</h1>
     <a href="/all-brokers" class="page-title-icon shadow-xl bg-theme color-theme" data-menu="menu-share"><i
@@ -69,17 +72,18 @@
                     {{#if transferStatus}}
                     <div class="text-dark">
                         {{#eq transferdata.against "Payment"}}
-                        <ul>
-                            <h6>Username : </h6><b>{{transferdata.username}}</b><br>
-                            <h6>Password : </h6><b>{{transferdata.password}}</b><br>
-                            <h6>Access Key : </h6><b>{{transferdata.access}}</b><br>
-                        </ul>
+                        <h6>Username : <b class="text-success">{{transferdata.username}}</b></h6>
+                        <h6>Password : <b class="text-success">{{transferdata.password}}</b></h6>
+                        <h6>Access Key : <b class="text-success">{{transferdata.access}}</b></h6>
+
                         {{/eq}}
                         {{#eq transferdata.against "Credentials"}}
                         {{transferdata.amount}} paid
                         {{/eq}}
                     </div>
                     {{/if}}
+                    <button style="border-radius: 50%;" onclick="refreshPage()" class="btn btn-dark mt-3"><i
+                            class="bi bi-arrow-clockwise"></i></button>
 
                     <!-- Your existing code to display broker details and credentials -->
                     <!-- ... -->
@@ -118,9 +122,9 @@
                             <a href="#"><img src="../../assets/images/avatars/1s.png" data-src="images/avatars/1s.png"
                                     width="40" class="rounded-circle preload-img entered loaded"
                                     data-ll-status="loaded"></a>
-                            <a class="float-end" href="#"
+                            {{!-- <a class="float-end" href="#"
                                 onclick="return confirm('Are You Sure to Remove {{broker.pairedUser}} ?')"><i
-                                    class="fa fa-trash text-danger"></i></a>
+                                    class="fa fa-trash text-danger"></i></a> --}}
                             <h6 class="font-14 font-600 mt-2">{{broker.pairedUser}}</h6>
 
 
@@ -158,7 +162,7 @@
 
 
 
-<div id="menu-resources" class="menu menu-box-bottom rounded-m" data-menu-height="390" data-menu-effect="menu-over">
+<div id="menu-resources" class="menu menu-box-bottom rounded-m" data-menu-height="250" data-menu-effect="menu-over">
     <div class="menu-title">
         <h4 class="text-center mt-4 mb-4">Select Your Resource Type</h4>
         <a href="#" class="close-menu"><i class="fa fa-times-circle"></i></a>
@@ -167,15 +171,15 @@
         <a href="#" data-menu="menu-Credentials"
             class="btn btn-l font-14 shadow-l btn-full rounded-s font-600 bg-green-dark text-start mb-2"><span
                 class="ms-n2">Credentials</span><span class="float-end me-n1"></span></a>
-        <a href="tel:+2 234 567 890"
+        {{!-- <a href="tel:+2 234 567 890"
             class="btn btn-l font-14 shadow-l btn-full rounded-s font-600 bg-blue-dark text-start mb-2"><span
-                class="ms-n2">Documents</span><span class="float-end me-n1"></span></a>
+                class="ms-n2">Documents</span><span class="float-end me-n1"></span></a> --}}
         <a href="#" data-menu="menu-Payment"
             class="btn btn-l font-14 shadow-l btn-full rounded-s font-600 bg-red-dark text-start"><span
                 class="ms-n2">Payment</span><span class="float-end me-n1"></span></a>
-        <a href="tel:+3 234 567 890"
+        {{!-- <a href="tel:+3 234 567 890"
             class="btn btn-l font-14 mt-2 shadow-l btn-full rounded-s font-600 bg-dark text-start"><span
-                class="ms-n2">Images</span><span class="float-end me-n1"></span></a>
+                class="ms-n2">Images</span><span class="float-end me-n1"></span></a> --}}
 
     </div>
 </div>
@@ -338,7 +342,7 @@
                     <i class="fa fa-check disabled valid color-green-dark"></i>
                     <em>(required)</em>
                 </div>
-                <input id="pay"  class="btn btn-success" type="button" name="" value="Pay Now">
+                <input id="pay" class="btn btn-success" type="button" name="" value="Pay Now">
                 <button type="submit"
                     class="btn btn-full btn-m shadow-l mb-3 w-100 rounded-s font-600 bg-blue-dark mt-4">
                     Pays to broker</button>
@@ -404,7 +408,7 @@
 </script>
 
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
@@ -416,40 +420,40 @@
             status: document.querySelector("#status").value,
             user_id: document.querySelector("#user_id").value,
             b_id: document.querySelector("#b_id").value,
-            type:document.querySelector("#type").value,
-            amount:document.querySelector("#amount").value,
+            type: document.querySelector("#type").value,
+            amount: document.querySelector("#amount").value,
         };
-         var donationAmount = formData.amount;
+        var donationAmount = formData.amount;
         const timestamp = new Date().getTime();
         const random = Math.floor(Math.random() * 10000);
         const orderId = `${timestamp}${random}`;
-       const amount=donationAmount*100;
-       if (donationAmount && donationAmount > 0) {
-                razorpayPayment(orderId,amount)
-                  $('#submit').prop('disabled', false);
-            } else {
-                alert('Please enter a valid donation amount.');
-            }
-               
-        });
+        const amount = donationAmount * 100;
+        if (donationAmount && donationAmount > 0) {
+            razorpayPayment(orderId, amount)
+            $('#submit').prop('disabled', false);
+        } else {
+            alert('Please enter a valid donation amount.');
+        }
+
+    });
 
 
-   /* $("#checkout-form").submit((e) => {
-        e.preventDefault();
-          $.ajax({
-                 $.ajax({
-            url: '/donateUs',
-            method: 'post',
-            data: $("#checkout-form").serialize(),
-            success: (response) => {
-     
-            }
-        })
+    /* $("#checkout-form").submit((e) => {
+         e.preventDefault();
+           $.ajax({
+                  $.ajax({
+             url: '/donateUs',
+             method: 'post',
+             data: $("#checkout-form").serialize(),
+             success: (response) => {
+      
+             }
+         })
+         
         
-       
-    }) */
+     }) */
 
-    function razorpayPayment(order,amount) {
+    function razorpayPayment(order, amount) {
         var options = {
             "key": "rzp_test_8NokNgt8cA3Hdv", // Enter the Key ID generated from the Dashboard
             "amount": amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -478,6 +482,13 @@
     }
 
     function verifyPayment(payment, order) {
-      
+
+    }
+</script>
+
+<script>
+    function refreshPage() {
+        // Reload the current page
+        location.reload();
     }
 </script>
