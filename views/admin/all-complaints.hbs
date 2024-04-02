@@ -1,0 +1,74 @@
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Manage Complaints</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+                <li class="breadcrumb-item">Complaints</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+
+                    <div class="card-body">
+                        <a href="/admin" class="btn btn-sm btn-dark mb-3 mt-4"><i class="bi bi-arrow-left"></i> Back to
+                            home</a>
+
+                        {{!-- <a href="/admin/remove-all-complaints"
+                            onclick="return confirm('Are You Sure to Remove All Users ?')"
+                            class="btn btn-danger mb-3 mt-4 ">Remove All Complaints</a> --}}
+                        <!-- Table with stripped rows -->
+                        <table class="table table-hover table-responsive datatable">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Date</th>
+
+                                    <th>Broker Id</th>
+                                    {{!-- <th>Type</th> --}}
+                                    <th>User Name</th>
+                                    <th>Image</th>
+                                    <th>Subject</th>
+                                    <th>Message</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each complaints}}
+                                <tr class="align-middle">
+                                    <th scope="row">{{incremented @index}}</th>
+                                    <td>{{this.date}}</td>
+                                    <td>{{this.bid}}</td>
+                                    {{!-- <td>{{this.category}}</td> --}}
+                                    <td>{{this.uname}}</td>
+                                    <td><a href="/images/report-images/{{this._id}}.png">
+                                            <img src="/images/report-images/{{this._id}}.png" alt=""
+                                                style="width: 5rem"></a>
+                                    </td>
+                                    <td>{{this.sub}}</td>
+                                    <td>
+                                        <div class="card p-3">{{this.msg}}</div>
+                                    </td>
+
+                                    {{!-- <td><a href="/admin/remove-user/{{this._id}}" class=""
+                                            onclick="return confirm('Are You Sure to Delete {{this.Name}} ?')"><i
+                                                class="bi bi-trash3 text-danger"></i></a></td> --}}
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                        <!-- End Table with stripped rows -->
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->

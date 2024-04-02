@@ -1,9 +1,14 @@
-<section>
-    <div class="container mt-5">
+{{!-- <section>
+    <div class="container mt-4">
         <div>
-            <a href="/admin/remove-all-users" onclick="return confirm('Are You Sure to Remove All Users ?')" class="btn btn-danger float-end mb-1">Remove All Users</a>
+            <a href="/admin/remove-all-users" onclick="return confirm('Are You Sure to Remove All Users ?')"
+                class="btn btn-danger float-end mb-1">Remove All Users</a>
         </div>
-        <div class="table-responsive-md mt-2">
+        <style>
+            @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css");
+        </style>
+        <a href="/admin" class="btn btn-sm btn-dark mb-2"><i class="bi bi-arrow-left"></i></a>
+        <div class="table-responsive-md mt-2 table-bordered">
             <table class="table responsive">
                 <thead class="table-dark">
                     <tr>
@@ -19,11 +24,146 @@
                         <th scope="row">{{incremented @index}}</th>
                         <td>{{this.Name}}</td>
                         <td>{{this.Email}}</td>
-                        <td><a href="/admin/remove-user/{{this._id}}" class="btn btn-danger" onclick="return confirm('Are You Sure to Delete {{this.Name}} ?')">Remove</a></td>
+                        <td><a href="/admin/remove-user/{{this._id}}" class=""
+                                onclick="return confirm('Are You Sure to Delete {{this.Name}} ?')"><i
+                                    class="bi bi-trash3 text-danger"></i></a></td>
                     </tr>
                     {{/each}}
                 </tbody>
             </table>
         </div>
     </div>
-</section>
+</section> --}}
+
+
+
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Manage Users</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+                <li class="breadcrumb-item">Users</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+
+                    <div class="card-body">
+                        <a href="/admin" class="btn btn-sm btn-dark mb-3 mt-4"><i class="bi bi-arrow-left"></i></a>
+
+                        <a href="/admin/remove-all-users" onclick="return confirm('Are You Sure to Remove All Users ?')"
+                            class="btn btn-danger mb-3 mt-4 ">Remove All Users</a>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#verticalycentered"
+                            class="btn btn-primary mb-3 mt-4 ">Add User</a>
+
+                        <div class="modal fade" id="verticalycentered" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Create New User</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <form class="row g-3 needs-validation" action="/admin/createuser" method="POST">
+                                            <input type="hidden" name="date" id="datetime">
+
+
+                                            <div class="col-12">
+                                                <input type="text" name="Name" class="form-control" id="yourUsername"
+                                                    placeholder="Name" required>
+                                                <div class="invalid-feedback">Please enter your name.</div>
+                                            </div>
+                                            <div class="col-12">
+                                                <input type="email" name="Email" class="form-control" id="yourUsername"
+                                                    placeholder="Email" required>
+                                                <div class="invalid-feedback">Please enter your email.</div>
+                                            </div>
+                                            <div class="col-12">
+                                                <input type="password" name="Password" class="form-control"
+                                                    id="yourPassword" placeholder="Password" required>
+                                                <div class="invalid-feedback">Please enter your password!</div>
+                                            </div>
+                                            <br><br>
+
+
+                                            <div class="col-12 mt-5">
+                                                <button class="btn btn-primary" type="submit">Login</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                            {{!-- <div class="col-12">
+                                                <p class="small mb-0">Don't have account? <a
+                                                        href="pages-register.html">Create
+                                                        an account</a></p>
+                                            </div> --}}
+                                        </form>
+                                    </div>
+                                    {{!-- <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                    </div> --}}
+                                </div>
+                            </div>
+                        </div><!-- End Vertically centered Modal-->
+                        <!-- Table with stripped rows -->
+                        <table class="table table-hover datatable">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th data-type="date" data-format="YYYY/DD/MM">Created Date</th>
+                                    <th>Manage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each users}}
+                                <tr class="align-middle">
+                                    <th scope="row">{{incremented @index}}</th>
+                                    <td>{{this.Name}}</td>
+                                    <td>{{this.Email}}</td>
+                                    <td>{{this.date}}</td>
+                                    <td><a href="/admin/remove-user/{{this._id}}" class=""
+                                            onclick="return confirm('Are You Sure to Delete {{this.Name}} ?')"><i
+                                                class="bi bi-trash3 text-danger"></i></a></td>
+                                </tr>
+                                {{/each}}
+
+                            </tbody>
+                        </table>
+                        <!-- End Table with stripped rows -->
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+<script>
+    // Get current date and time
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    const hours = ((now.getHours() + 11) % 12 + 1).toString().padStart(2, '0'); // Convert to 12-hour format
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+
+    // Set default value to current date and time in MM/DD/YYYY format
+    const defaultDateTime = `${month}/${day}/${year}T${hours}:${minutes}`;
+    document.getElementById('datetime').value = defaultDateTime;
+</script>

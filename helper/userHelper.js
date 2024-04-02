@@ -12,7 +12,7 @@ var instance = new Razorpay({
 module.exports = {
 
   //////ADD report/////////////////////    
-  
+
 
   addreport: (report, callback) => {
     console.log(report);
@@ -21,13 +21,16 @@ module.exports = {
       .insertOne(report)
       .then((data) => {
         console.log(data);
-        callback(null, data);  // Invoke callback with success and data
+        const id = data.insertedId; // Assuming the id is in the insertedId field
+        console.log("Inserted report ID:", id);
+        callback(null, id);  // Invoke callback with success and id
       })
       .catch((error) => {
         console.error("Error in addreport:", error);
         callback(error, null);  // Invoke callback with error
       });
   },
+
 
   ///////GET ALL report/////////////////////                                            
   getAllreports: () => {

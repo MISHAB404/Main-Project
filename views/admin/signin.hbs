@@ -1,26 +1,74 @@
-<div class="row mx-auto">
-    <div class="col-md-6 mx-auto">
-        <div class="container mt-5">
-            <h2 class="text-center">Sign In</h2>
-            <form action="/admin/signin" method="POST">
-                {{#if signInErr}}
-                    <div class="alert alert-danger" role="alert">
-                        <p class="error alert-heading">{{signInErr}}</p>
+<main>
+    <div class="container">
+
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+                        <div class="d-flex justify-content-center py-4">
+                            <a href="/admin" class="logo d-flex align-items-center w-auto">
+                                <img src="../assets/img/logo.png" alt="">
+                                <span class="d-none d-lg-block">True Transfer</span>
+                            </a>
+                        </div><!-- End Logo -->
+
+                        <div class="card mb-3">
+
+                            <div class="card-body">
+
+                                <div class="pt-4 pb-2">
+                                    <h5 class="card-title text-center pb-0 fs-4">Login to Admin Panel</h5>
+                                    {{#if signInErr}}
+                                    <p class="text-danger text-center">{{signInErr}}</p>
+                                    {{/if}}
+                                    <p class="text-center small">Enter your email & password to login</p>
+                                </div>
+
+                                <form class="row g-3 needs-validation" action="/admin/signin" method="POST">
+
+                                    <div class="col-12">
+                                        {{!-- <label for="yourUsername" class="form-label">Email</label> --}}
+                                        <div class="input-group has-validation">
+
+                                            <input type="email" name="Email" class="form-control" id="yourUsername"
+                                                placeholder="Email" required>
+                                            <div class="invalid-feedback">Please enter your email.</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        {{!-- <label for="yourPassword" class="form-label">Password</label> --}}
+                                        <input type="password" name="Password" class="form-control" id="yourPassword"
+                                            placeholder="Password" required>
+                                        <div class="invalid-feedback">Please enter your password!</div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="remember" value="true"
+                                                id="rememberMe">
+                                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-primary w-100" type="submit">Login</button>
+                                    </div>
+                                    {{!-- <div class="col-12">
+                                        <p class="small mb-0">Don't have account? <a href="pages-register.html">Create
+                                                an account</a></p>
+                                    </div> --}}
+                                </form>
+
+                            </div>
+                        </div>
+
+
                     </div>
-                {{/if}}
-                <div class="form-group mt-4">
-                    <label>Email address</label>
-                    <input type="email" class="form-control" name="Email" placeholder="Enter Email">
                 </div>
-                <div class="form-group mt-4">
-                    <label>Password</label>
-                    <input type="password" class="form-control" name="Password" placeholder="Password">
-                </div>
-                <div class="row">
-                    <a href="/admin/signup" class="mt-4">Create a New Account ?</a>
-                    <button type="submit" class="btn btn-primary mt-2">Sign Up</button>
-                </div>
-            </form>
-        </div>
+            </div>
+
+        </section>
+
     </div>
-</div>
+</main><!-- End #main -->

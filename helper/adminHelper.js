@@ -135,6 +135,17 @@ module.exports = {
     });
   },
 
+  getAllComplaints: () => {
+    return new Promise(async (resolve, reject) => {
+      let complaints = await db
+        .get()
+        .collection(collections.REPORT_COLLECTION)
+        .find()
+        .toArray();
+      resolve(complaints);
+    });
+  },
+
   removeUser: (userId) => {
     return new Promise((resolve, reject) => {
       db.get()
@@ -213,7 +224,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       db.get()
         .collection(collections.PRODUCTS_COLLECTION)
-        .createIndex({ Name : "text" }).then(async()=>{
+        .createIndex({ Name: "text" }).then(async () => {
           let result = await db
             .get()
             .collection(collections.PRODUCTS_COLLECTION)

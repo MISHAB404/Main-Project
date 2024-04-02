@@ -99,7 +99,12 @@ router.get("/add-report", verifySignedIn, function (req, res) {
 ///////ADD report/////////////////////                                         
 router.post("/add-report", async function (req, res) {
   try {
-    userHelper.addreport(req.body, async (id) => {
+    userHelper.addreport(req.body, async (error, id) => { // Update the callback signature to receive error and id
+      if (error) {
+        console.error("Error adding report:", error);
+        res.redirect("/error");
+        return;
+      }
       // Handle file upload
       if (req.files && req.files.Image) {
         let image = req.files.Image;
@@ -122,6 +127,7 @@ router.post("/add-report", async function (req, res) {
     res.redirect("/error");
   }
 });
+
 
 
 

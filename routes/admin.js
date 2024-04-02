@@ -15,15 +15,16 @@ const verifySignedIn = (req, res, next) => {
 /* GET admins listing. */
 router.get("/", verifySignedIn, function (req, res, next) {
   let administator = req.session.admin;
-  adminHelper.getAllProducts().then((products) => {
-    res.render("admin/home", { admin: true, products, administator });
+  adminHelper.getAllComplaints().then((complaints) => {
+    res.render("admin/home", { admin: true, layout: "admin", administator, complaints });
   });
 });
+
 
 router.get("/all-products", verifySignedIn, function (req, res) {
   let administator = req.session.admin;
   adminHelper.getAllProducts().then((products) => {
-    res.render("admin/all-products", { admin: true, products, administator });
+    res.render("admin/all-products", { admin: true, layout: "admin", products, administator });
   });
 });
 
@@ -32,7 +33,7 @@ router.get("/signup", function (req, res) {
     res.redirect("/admin");
   } else {
     res.render("admin/signup", {
-      admin: true,
+      admin: true, layout: "admin2",
       signUpErr: req.session.signUpErr,
     });
   }
@@ -57,7 +58,7 @@ router.get("/signin", function (req, res) {
     res.redirect("/admin");
   } else {
     res.render("admin/signin", {
-      admin: true,
+      admin: true, layout: "admin2",
       signInErr: req.session.signInErr,
     });
     req.session.signInErr = null;
@@ -85,7 +86,7 @@ router.get("/signout", function (req, res) {
 
 router.get("/add-product", verifySignedIn, function (req, res) {
   let administator = req.session.admin;
-  res.render("admin/add-product", { admin: true, administator });
+  res.render("admin/add-product", { admin: true, layout: "admin", administator });
 });
 
 router.post("/add-product", function (req, res) {
@@ -106,7 +107,7 @@ router.get("/edit-product/:id", verifySignedIn, async function (req, res) {
   let productId = req.params.id;
   let product = await adminHelper.getProductDetails(productId);
   console.log(product);
-  res.render("admin/edit-product", { admin: true, product, administator });
+  res.render("admin/edit-product", { admin: true, layout: "admin", product, administator });
 });
 
 router.post("/edit-product/:id", verifySignedIn, function (req, res) {
@@ -139,9 +140,63 @@ router.get("/delete-all-products", verifySignedIn, function (req, res) {
 router.get("/all-users", verifySignedIn, function (req, res) {
   let administator = req.session.admin;
   adminHelper.getAllUsers().then((users) => {
-    res.render("admin/all-users", { admin: true, administator, users });
+    res.render("admin/all-users", { admin: true, layout: "admin", administator, users });
   });
 });
+
+router.get("/all-complaints", verifySignedIn, function (req, res) {
+  let administator = req.session.admin;
+  adminHelper.getAllComplaints().then((complaints) => {
+    res.render("admin/all-complaints", { admin: true, layout: "admin", administator, complaints });
+  });
+});
+
+
+
+// router.get("/createuser", function (req, res) {
+//   res.render("users/signup", { admin: false, layout: "empty" });
+
+// });
+
+router.post("/createuser", async function (req, res) {
+  try {
+    const errors = [];
+
+    // Check if the password is at least 6 characters long
+    if (req.body.Password.length < 6) {
+      errors.push("Please enter at least a 6-character strong password");
+    }
+
+    try {
+      const response = await userHelper.doSignup(req.body);
+      req.session.signedIn = true;
+      req.session.user = response;
+      res.redirect("/admin/all-users");
+    } catch (error) {
+      console.error(error);
+
+      // Check if the error is a MongoDB duplicate key error
+      if (error && error.message && error.message.includes("duplicate key error")) {
+        console.log("Email already exists error:", error.message);
+        errors.push("Email already exists");
+      } else {
+        console.log("Other error:", error.message);
+        errors.push("Email already exists");
+      }
+    }
+
+    // Check if there are any errors to display
+    if (errors.length > 0) {
+      // Pass entered data and errors to the template
+      res.render("/admin/all-users", { admin: false, layout: "empty", signUpErr: errors, formData: req.body });
+    }
+  } catch (error) {
+    console.error("Unexpected error:", error);
+    // Handle unexpected errors, log them, and render an appropriate error page
+    res.render("error", { message: "An unexpected error occurred", error });
+  }
+});
+
 
 router.get("/remove-user/:id", verifySignedIn, function (req, res) {
   let userId = req.params.id;
@@ -160,7 +215,7 @@ router.get("/all-orders", verifySignedIn, async function (req, res) {
   let administator = req.session.admin;
   let orders = await adminHelper.getAllOrders();
   res.render("admin/all-orders", {
-    admin: true,
+    admin: true, layout: "admin",
     administator,
     orders,
   });
@@ -174,7 +229,7 @@ router.get(
     let orderId = req.params.id;
     let products = await userHelper.getOrderProducts(orderId);
     res.render("admin/order-products", {
-      admin: true,
+      admin: true, layout: "admin",
       administator,
       products,
     });
@@ -205,7 +260,7 @@ router.get("/cancel-all-orders", verifySignedIn, function (req, res) {
 router.post("/search", verifySignedIn, function (req, res) {
   let administator = req.session.admin;
   adminHelper.searchProduct(req.body).then((response) => {
-    res.render("admin/search-result", { admin: true, administator, response });
+    res.render("admin/search-result", { admin: true, layout: "admin", administator, response });
   });
 });
 
