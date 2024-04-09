@@ -58,8 +58,10 @@
                                     </td>
                                     <td><a href="" style="margin-right: 20px;"><i
                                                 class="bi bi-trash3 text-danger"></i></a>
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i
-                                                class="bi bi-send"></i></a>
+                                     
+                                     <button type="button" data-bs-toggle="modal" data-userid="{{this.userId}}" data-repid="{{this._id}}" data-bs-target="#staticBackdrop"><i
+                                                class="bi bi-send"></i></button>
+                                        
                                     </td>
 
                                     {{!-- <td><a href="/admin/remove-user/{{this._id}}" class=""
@@ -88,12 +90,13 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Send Message to </h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Send Message to  <span id="user_id_placeholder"></span></h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form>
-
+                <form method="post" action="/admin/reply">
+                     <input type="hidden" id="user_id_input" name="user_id">
+                     <input type="hidden" id="rep_id_input" name="rep_id">
                     <textarea class="form-control" placeholder="Enter the message" name="msg"></textarea>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -105,3 +108,19 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+
+        document.querySelectorAll('[data-bs-target="#staticBackdrop"]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var userId = button.getAttribute('data-userid');
+                 var repId = event.currentTarget.getAttribute('data-repid');
+                document.getElementById('user_id_placeholder').innerText = userId;
+                document.getElementById('user_id_input').value = userId;
+                 document.getElementById('rep_id_input').value = repId;
+                myModal.show();
+            });
+        });
+    });
+</script>

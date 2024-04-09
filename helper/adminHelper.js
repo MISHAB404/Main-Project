@@ -15,7 +15,24 @@ module.exports = {
         callback(data.ops[0]._id);
       });
   },
-
+  setReply:(obj)=>{
+    return new Promise(async (resolve, reject) => {
+      await db.get().collection(collections.REPORT_COLLECTION)
+      .updateOne(
+        { _id: objectId(obj.rep_id) },
+        {
+          $set:{
+            status:"replied",
+            repMsg:obj.msg
+          }
+          // $push: { chat: obj.msg },
+        }
+      )
+      .then((response) => {
+        resolve(response);
+      });
+    })
+  },
   getAllProducts: () => {
     return new Promise(async (resolve, reject) => {
       let products = await db

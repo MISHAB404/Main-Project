@@ -151,6 +151,15 @@ router.get("/all-complaints", verifySignedIn, function (req, res) {
   });
 });
 
+router.post("/reply", function (req, res) {
+  console.log("repppp",req.body)
+  adminHelper.setReply(req.body).then((complaints) => {
+    res.redirect("/admin/all-complaints");
+  });
+});
+
+
+
 
 
 // router.get("/createuser", function (req, res) {
