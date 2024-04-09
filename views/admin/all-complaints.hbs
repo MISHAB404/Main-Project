@@ -36,6 +36,8 @@
                                     <th>Image</th>
                                     <th>Subject</th>
                                     <th>Message</th>
+                                    <th>Manage</th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -53,6 +55,11 @@
                                     <td>{{this.sub}}</td>
                                     <td>
                                         <div class="card p-3">{{this.msg}}</div>
+                                    </td>
+                                    <td><a href="" style="margin-right: 20px;"><i
+                                                class="bi bi-trash3 text-danger"></i></a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i
+                                                class="bi bi-send"></i></a>
                                     </td>
 
                                     {{!-- <td><a href="/admin/remove-user/{{this._id}}" class=""
@@ -72,3 +79,29 @@
     </section>
 
 </main><!-- End #main -->
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Send Message to </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+
+                    <textarea class="form-control" placeholder="Enter the message" name="msg"></textarea>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
