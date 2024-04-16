@@ -28,6 +28,21 @@ router.get("/all-products", verifySignedIn, function (req, res) {
   });
 });
 
+router.get("/all-brokers", verifySignedIn, function (req, res) {
+  let administator = req.session.admin;
+  adminHelper.getAllbrokers().then((brokers) => {
+    res.render("admin/all-brokers", { admin: true, layout: "admin", brokers, administator });
+  });
+});
+
+router.get("/delete-broker/:id", verifySignedIn, function (req, res) {
+  let brokerId = req.params.id;
+  adminHelper.deletebroker(brokerId).then((response) => {
+    fs.unlinkSync("./public/images/broker-images/" + brokerId + ".png");
+    res.redirect("/admin/all-brokers");
+  });
+});
+
 router.get("/signup", function (req, res) {
   if (req.session.signedInAdmin) {
     res.redirect("/admin");
@@ -152,7 +167,7 @@ router.get("/all-complaints", verifySignedIn, function (req, res) {
 });
 
 router.post("/reply", function (req, res) {
-  console.log("repppp",req.body)
+  console.log("repppp", req.body)
   adminHelper.setReply(req.body).then((complaints) => {
     res.redirect("/admin/all-complaints");
   });

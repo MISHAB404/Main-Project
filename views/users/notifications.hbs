@@ -1,0 +1,12 @@
+<br><br>
+<div class="container mt-4">
+    <h2>All Notifications</h2><br>
+    {{#each reports}}
+    <div class="card p-3 shadow mb-2" style="border-radius: 10px;">
+        <h4>{{this.date}}</h4>
+        <p style="margin-bottom: 6px;">From Admin</p>
+        <p style="margin-bottom: 2px;">Message : </p>
+        <h5>{{this.repMsg}}</h5>
+    </div>
+    {{/each}}
+</div>

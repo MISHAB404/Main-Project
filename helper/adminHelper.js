@@ -15,24 +15,49 @@ module.exports = {
         callback(data.ops[0]._id);
       });
   },
-  setReply:(obj)=>{
+  setReply: (obj) => {
     return new Promise(async (resolve, reject) => {
       await db.get().collection(collections.REPORT_COLLECTION)
-      .updateOne(
-        { _id: objectId(obj.rep_id) },
-        {
-          $set:{
-            status:"replied",
-            repMsg:obj.msg
+        .updateOne(
+          { _id: objectId(obj.rep_id) },
+          {
+            $set: {
+              status: "replied",
+              repMsg: obj.msg,
+              date1: obj.date1
+
+            }
+            // $push: { chat: obj.msg },
           }
-          // $push: { chat: obj.msg },
-        }
-      )
-      .then((response) => {
-        resolve(response);
-      });
+        )
+        .then((response) => {
+          resolve(response);
+        });
     })
   },
+
+  ///////GET ALL broker/////////////////////                                            
+  // getAllbrokers: (userId) => {
+  //   return new Promise(async (resolve, reject) => {
+  //     let brokers = await db
+  //       .get()
+  //       .collection(collections.BROKER_COLLECTION)
+  //       .find({ $or: [{ userId: userId }, { pu_id: userId }] }) // Filter brokers based on userId
+  //       .toArray();
+  //     resolve(brokers);
+  //   });
+  // },
+  getAllbrokers: () => {
+    return new Promise(async (resolve, reject) => {
+      let brokers = await db
+        .get()
+        .collection(collections.BROKER_COLLECTION)
+        .find()
+        .toArray();
+      resolve(brokers);
+    });
+  },
+
   getAllProducts: () => {
     return new Promise(async (resolve, reject) => {
       let products = await db
@@ -92,6 +117,18 @@ module.exports = {
         .collection(collections.PRODUCTS_COLLECTION)
         .findOne({ _id: objectId(productId) })
         .then((response) => {
+          resolve(response);
+        });
+    });
+  },
+
+  deletebroker: (brokerId) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collections.BROKER_COLLECTION)
+        .removeOne({ _id: objectId(brokerId) })
+        .then((response) => {
+          console.log(response);
           resolve(response);
         });
     });

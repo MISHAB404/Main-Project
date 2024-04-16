@@ -63,6 +63,13 @@ router.post("/chat/:usertype/:user_id/:brokerId", verifySignedIn, async function
 });
 
 
+router.get("/notifications", verifySignedIn, function (req, res) {
+  let userId = req.session.user._id; // Assuming userId is stored in _id field
+  userHelper.getAllReports(userId).then((reports) => {
+    res.render("users/notifications", { admin: false, layout: "home", reports, user: req.session.user });
+  });
+});
+
 ///////ALL report/////////////////////                                         
 router.get("/all-reports", verifySignedIn, function (req, res) {
   let user = req.session.user;

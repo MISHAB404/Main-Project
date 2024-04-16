@@ -33,12 +33,12 @@ module.exports = {
 
 
   ///////GET ALL report/////////////////////                                            
-  getAllreports: () => {
+  getAllReports: (userId) => {
     return new Promise(async (resolve, reject) => {
       let reports = await db
         .get()
         .collection(collections.REPORT_COLLECTION)
-        .find()
+        .find({ userId: userId }) // Add a query parameter for userId
         .toArray();
       resolve(reports);
     });
