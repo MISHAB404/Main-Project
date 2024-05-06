@@ -70,6 +70,12 @@ router.get("/notifications", verifySignedIn, function (req, res) {
   });
 });
 
+router.get("/profile", verifySignedIn, function (req, res) {
+  let userId = req.session.user._id; // Assuming userId is stored in _id field
+  res.render("users/profile", { admin: false, layout: "home", user: req.session.user });
+
+});
+
 ///////ALL report/////////////////////                                         
 router.get("/all-reports", verifySignedIn, function (req, res) {
   let user = req.session.user;

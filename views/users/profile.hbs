@@ -1,0 +1,33 @@
+<br><br>
+<div class="container-fluid mt-3">
+    <h2>Your Profile</h2>
+
+    <div class="card p-3 shadow" style="border-radius: 10px;">
+        {{#if user}}
+        <div class="input-style has-borders has-icon validate-field mb-4">
+            <i class="fa fa-user"></i>
+            <input type="text" name="bname" value="{{user.Name}}" class="form-control validate-name" id="form1acd"
+                placeholder="Broker Name" readonly>
+            <label for="form1acd" class="color-highlight font-11 font-500"> Name</label>
+            <i class="fa fa-times disabled invalid color-red-dark"></i>
+            <i class="fa fa-check disabled valid color-green-dark"></i>
+        </div>
+
+        <div class="input-style has-borders has-icon validate-field mb-4">
+            <i class="fa fa-envelope"></i>
+            <input type="text" name="bname" value="{{user.Email}}" class="form-control validate-name" id="form1acd"
+                placeholder="Broker Name" readonly>
+            <label for="form1acd" class="color-highlight font-11 font-500">Email</label>
+            <i class="fa fa-times disabled invalid color-red-dark"></i>
+            <i class="fa fa-check disabled valid color-green-dark"></i>
+        </div>
+    </div>
+
+
+    {{/if}}
+</div>
+
+<br><br><br>
+<br><br><br>
+<br><br><br>
+<br><br><br>

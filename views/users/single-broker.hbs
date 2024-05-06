@@ -60,24 +60,73 @@
         </div>
     </div>
 
+    <style>
+        .visible {
+            filter: blur(5px);
+            /* Initial blur effect */
+        }
+
+        .visible.visible2 {
+            filter: none;
+            /* Remove blur effect when visible class is applied */
+        }
+    </style>
+
     <div class="card card-full-center  card-style" style="margin-top: -20px;">
         <div class="content">
             <div class="d-flex">
                 <div>
                     <h4 class="mb-2">Transfered Data</h4>
+                    <hr>
                     <!-- Add this section in your single-broker.hbs file -->
                     {{#if transferStatus}}
                     <div class="text-dark">
                         {{#eq transferdata.against "Payment"}}
-                        <ul>
-                            <h6>Username : </h6><b>{{transferdata.username}}</b><br>
-                            <h6>Password : </h6><b>{{transferdata.password}}</b><br>
-                            <h6>Access Key : </h6><b>{{transferdata.access}}</b><br>
-                        </ul>
+                        <div class="visible">
+                            <h6>Username : <b class="text-success" id="username">{{transferdata.username}}</b></h6>
+                            <h6>Password : <b class="text-success" id="password">{{transferdata.password}}</b></h6>
+                            <h6>Access Key : <b class="text-success" id="access">{{transferdata.access}}</b></h6>
+                        </div>
+                        <button class="btn btn-sm mt-3 btn-dark" style="border-radius: 10px;"
+                            onclick="copyContent()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+                            </svg></button>
+
+                        <button class="btn btn-sm mt-3 btn-primary" style="border-radius: 10px;"
+                            onclick="reloadPage()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z" />
+                                <path
+                                    d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466" />
+                            </svg></button>
+
+                        <button class="btn btn-sm mt-3 btn-danger" style="border-radius: 10px;"
+                            onclick="toggleVisibility()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                <path
+                                    d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                                <path
+                                    d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                            </svg></button>
+
+
+
+
                         {{/eq}}
                         {{#eq transferdata.against "Credentials"}}
-                        {{transferdata.amount}} paid
+                        <h6 class="text-success">{{transferdata.amount}} Paid Successfully</h6>
                         {{/eq}}
+                        <button class="btn btn-sm mt-3 btn-primary" style="border-radius: 10px;"
+                            onclick="reloadPage()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z" />
+                                <path
+                                    d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466" />
+                            </svg></button>
                     </div>
                     {{/if}}
 
@@ -118,9 +167,9 @@
                             <a href="#"><img src="../../assets/images/avatars/1s.png" data-src="images/avatars/1s.png"
                                     width="40" class="rounded-circle preload-img entered loaded"
                                     data-ll-status="loaded"></a>
-                            <a class="float-end" href="#"
+                            {{!-- <a class="float-end" href="#"
                                 onclick="return confirm('Are You Sure to Remove {{broker.pairedUser}} ?')"><i
-                                    class="fa fa-trash text-danger"></i></a>
+                                    class="fa fa-trash text-danger"></i></a> --}}
                             <h6 class="font-14 font-600 mt-2">{{broker.pairedUser}}</h6>
 
 
@@ -158,7 +207,7 @@
 
 
 
-<div id="menu-resources" class="menu menu-box-bottom rounded-m" data-menu-height="390" data-menu-effect="menu-over">
+<div id="menu-resources" class="menu menu-box-bottom rounded-m" data-menu-height="230" data-menu-effect="menu-over">
     <div class="menu-title">
         <h4 class="text-center mt-4 mb-4">Select Your Resource Type</h4>
         <a href="#" class="close-menu"><i class="fa fa-times-circle"></i></a>
@@ -167,15 +216,15 @@
         <a href="#" data-menu="menu-Credentials"
             class="btn btn-l font-14 shadow-l btn-full rounded-s font-600 bg-green-dark text-start mb-2"><span
                 class="ms-n2">Credentials</span><span class="float-end me-n1"></span></a>
-        <a href="tel:+2 234 567 890"
+        {{!-- <a href="tel:+2 234 567 890"
             class="btn btn-l font-14 shadow-l btn-full rounded-s font-600 bg-blue-dark text-start mb-2"><span
-                class="ms-n2">Documents</span><span class="float-end me-n1"></span></a>
+                class="ms-n2">Documents</span><span class="float-end me-n1"></span></a> --}}
         <a href="#" data-menu="menu-Payment"
             class="btn btn-l font-14 shadow-l btn-full rounded-s font-600 bg-red-dark text-start"><span
                 class="ms-n2">Payment</span><span class="float-end me-n1"></span></a>
-        <a href="tel:+3 234 567 890"
+        {{!-- <a href="tel:+3 234 567 890"
             class="btn btn-l font-14 mt-2 shadow-l btn-full rounded-s font-600 bg-dark text-start"><span
-                class="ms-n2">Images</span><span class="float-end me-n1"></span></a>
+                class="ms-n2">Images</span><span class="float-end me-n1"></span></a> --}}
 
     </div>
 </div>
@@ -340,7 +389,7 @@
                     <i class="fa fa-check disabled valid color-green-dark"></i>
                     <em>(required)</em>
                 </div>
-                <input id="pay"  class="btn btn-success" type="button" name="" value="Pay Now">
+                <input id="pay" class="btn btn-success" type="button" name="" value="Pay Now">
                 <button type="submit"
                     class="btn btn-full btn-m shadow-l mb-3 w-100 rounded-s font-600 bg-blue-dark mt-4">
                     Pays to broker</button>
@@ -406,7 +455,7 @@
 </script>
 
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
@@ -418,40 +467,40 @@
             status: document.querySelector("#status").value,
             user_id: document.querySelector("#user_id").value,
             b_id: document.querySelector("#b_id").value,
-            type:document.querySelector("#type").value,
-            amount:document.querySelector("#amount").value,
+            type: document.querySelector("#type").value,
+            amount: document.querySelector("#amount").value,
         };
-         var donationAmount = formData.amount;
+        var donationAmount = formData.amount;
         const timestamp = new Date().getTime();
         const random = Math.floor(Math.random() * 10000);
         const orderId = `${timestamp}${random}`;
-       const amount=donationAmount*100;
-       if (donationAmount && donationAmount > 0) {
-                razorpayPayment(orderId,amount)
-                  $('#submit').prop('disabled', false);
-            } else {
-                alert('Please enter a valid donation amount.');
-            }
-               
-        });
+        const amount = donationAmount * 100;
+        if (donationAmount && donationAmount > 0) {
+            razorpayPayment(orderId, amount)
+            $('#submit').prop('disabled', false);
+        } else {
+            alert('Please enter a valid donation amount.');
+        }
+
+    });
 
 
-   /* $("#checkout-form").submit((e) => {
-        e.preventDefault();
-          $.ajax({
-                 $.ajax({
-            url: '/donateUs',
-            method: 'post',
-            data: $("#checkout-form").serialize(),
-            success: (response) => {
-     
-            }
-        })
+    /* $("#checkout-form").submit((e) => {
+         e.preventDefault();
+           $.ajax({
+                  $.ajax({
+             url: '/donateUs',
+             method: 'post',
+             data: $("#checkout-form").serialize(),
+             success: (response) => {
+      
+             }
+         })
+         
         
-       
-    }) */
+     }) */
 
-    function razorpayPayment(order,amount) {
+    function razorpayPayment(order, amount) {
         var options = {
             "key": "rzp_test_8NokNgt8cA3Hdv", // Enter the Key ID generated from the Dashboard
             "amount": amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -480,6 +529,41 @@
     }
 
     function verifyPayment(payment, order) {
-      
+
+    }
+</script>
+
+<script>
+    function copyContent() {
+        var username = document.getElementById('username').innerText;
+        var password = document.getElementById('password').innerText;
+        var access = document.getElementById('access').innerText;
+
+        var contentToCopy = "Username: " + username + "\nPassword: " + password + "\nAccess Key: " + access;
+
+        // Create a textarea element to hold the content temporarily
+        var textarea = document.createElement('textarea');
+        textarea.value = contentToCopy;
+        document.body.appendChild(textarea);
+
+        // Select and copy the content
+        textarea.select();
+        document.execCommand('copy');
+
+        // Remove the textarea
+        document.body.removeChild(textarea);
+
+        alert('Content copied to clipboard');
+    }
+
+    function reloadPage() {
+        location.reload();
+    }
+</script>
+
+<script>
+    function toggleVisibility() {
+        var container = document.querySelector('.visible');
+        container.classList.toggle('visible2');
     }
 </script>

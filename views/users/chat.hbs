@@ -4,6 +4,12 @@
 
     <a href="#" class="page-title-icon shadow-xl bg-theme color-theme" onclick="refreshPage()"><i
             class="fa fa-refresh"></i></a>
+    <a href="/all-brokers" class="page-title-icon shadow-xl bg-theme color-theme"><svg
+            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+        </svg></a>
     <a href="#" class="page-title-icon shadow-xl bg-theme color-theme show-on-theme-dark" data-toggle-theme=""><i
             class="fa fa-lightbulb color-yellow-dark"></i></a>
     <a href="#" class="page-title-icon shadow-xl bg-theme color-theme" data-menu="menu-main"><i
@@ -72,8 +78,9 @@
         <a href="#" data-menu="menu-upload" class="bg-gray-dark ms-2"><i class="fa fa-plus pt-2"></i></a>
     </div> --}}
     <form action="/chat/{{usertype}}/{{user_id}}/{{brokerId}}" method="post">
-        <div class="flex-fill ms-3 speach-input">
-            <input type="text" class="form-control w-100" name="msg" placeholder="Enter your Message here">
+        <div class=" ms-4 speach-input">
+            <input type="text" class="form-control w-100" style="width: 100px;" name="msg"
+                placeholder="Enter your message here">
         </div>
 
         <div class="ms-3 speach-icon">
