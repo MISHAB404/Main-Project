@@ -21,10 +21,15 @@ const verifySignedIn = (req, res, next) => {
   }
 };
 
-router.get("/", verifySignedIn, function (req, res, next) {
-  let user = req.session.user;
-  res.render("users/signin", { admin: false, user, layout: "empty" });
+router.get("/", function (req, res, next) {
+  res.render("users/welcome", { admin: false, layout: "empty" });
 });
+
+router.get("/welcome", function (req, res) {
+  res.render("users/welcome", { admin: false, layout: "empty" });
+
+});
+
 
 
 router.get("/chat", verifySignedIn, async function (req, res, next) {
